@@ -8,19 +8,19 @@ public class Info {
     private String department;
     private String currentSemester;
     private String registrationYear;
-    private String programTitle;
+    private String curriculum;
 
     public Info() {
     }
 
-    public Info(String am, String firstName, String lastName, String department, String semester, String registrationYear, String programTitle) {
+    public Info(String am, String firstName, String lastName, String department, String semester, String registrationYear, String curriculum) {
         this.am = am;
         this.firstName = firstName;
         this.lastName = lastName;
         this.department = department;
         this.currentSemester = semester;
         this.registrationYear = registrationYear;
-        this.programTitle = programTitle;
+        this.curriculum = curriculum;
     }
 
     public String getAm() {
@@ -71,11 +71,11 @@ public class Info {
         this.registrationYear = registrationYear;
     }
 
-    public String getProgramTitle() {
-        return programTitle;
+    public String getCurriculum() {
+        return curriculum;
     }
 
-    public void setProgramTitle(String programTitle) {
-        this.programTitle = programTitle;
+    public void setCurriculum(String curriculum) {
+        this.curriculum = curriculum;
     }
 }

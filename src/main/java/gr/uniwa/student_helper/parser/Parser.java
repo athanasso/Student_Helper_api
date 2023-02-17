@@ -32,10 +32,10 @@ public class Parser {
             String am = student.get("studentNo").asText();
             info.setAm(am);
 
-            String firstName = student.get("lastName").asText();
+            String firstName = student.get("firstName").asText();
             info.setFirstName(firstName);
 
-            String lastName = student.get("firstName").asText();
+            String lastName = student.get("lastName").asText();
             info.setLastName(lastName);
 
             String department = student.get("departmentTitle").asText();
@@ -44,8 +44,8 @@ public class Parser {
             String registrationYear = student.get("insSyllabus").asText();
             info.setRegistrationYear(registrationYear);
             
-            String programTitle = student.get("programTitle").asText();
-            info.setProgramTitle(programTitle);
+            String curriculum = student.get("programTitle").asText();
+            info.setCurriculum(curriculum);
 
             int currentSemester = student.get("lastSemester").asInt();
             info.setCurrentSemester((currentSemester == 0) ? "1" : String.valueOf(currentSemester));
@@ -86,7 +86,6 @@ public class Parser {
 
                 String name = courseJSON.get("title").asText();
                 course.setName(name);
-
                 double grade = 0;
                 if ((courseJSON.get("grade").asDouble() * 10) > 5) {
                     grade = courseJSON.get("grade").asDouble() * 10;
