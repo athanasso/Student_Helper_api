@@ -257,7 +257,7 @@ public class Scraper {
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 // success
                 BufferedReader in = new BufferedReader(new InputStreamReader(
-                        con.getInputStream()));
+                        con.getInputStream(), "UTF-8"));
                 String inputLine;
                 StringBuilder responseString = new StringBuilder();
 
