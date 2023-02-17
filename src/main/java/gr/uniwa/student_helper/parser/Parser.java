@@ -31,9 +31,7 @@ public class Parser {
         try {
             JsonNode student = new ObjectMapper().readTree(infoJSON);
 
-            String aem = student.get("username") != null
-                    ? student.get("username").asText()
-                    : student.get("studentNo").asText();
+            String aem = student.get("studentNo").asText();
             info.setAem(aem);
 
             String firstName = student.get("lastName").asText();
@@ -45,11 +43,14 @@ public class Parser {
             String department = student.get("departmentTitle").asText();
             info.setDepartment(department);
 
-            String registrationYear = student.get("programTitle").asText();
+            String registrationYear = student.get("insSyllabus").asText();
             info.setRegistrationYear(registrationYear);
+            
+            String programTitle = student.get("programTitle").asText();
+            info.setProgramTitle(programTitle);
 
-            int semester = student.get("lastSemester").asInt();
-            info.setSemester((semester == 0) ? "1" : String.valueOf(semester));
+            int currentSemester = student.get("lastSemester").asInt();
+            info.setCurrentSemester((currentSemester == 0) ? "1" : String.valueOf(currentSemester));
 
             return info;
         } catch (IOException e) {
