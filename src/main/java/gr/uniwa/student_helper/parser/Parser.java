@@ -3,7 +3,6 @@ package gr.uniwa.student_helper.parser;
 import gr.uniwa.student_helper.model.Info;
 import gr.uniwa.student_helper.model.Course;
 import gr.uniwa.student_helper.model.Grades;
-import gr.uniwa.student_helper.model.Semester;
 import gr.uniwa.student_helper.model.Student;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +14,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Parser {
-    private final int SEMESTER = 15;
     private Exception exception;
     private String document;
     private final String PRE_LOG;
@@ -63,12 +61,11 @@ public class Parser {
 
     private Grades parseGradesJSON(String gradesJSON, String totalAverageGrade) {
         Grades grades = new Grades();
-        ArrayList<Semester> semesters = initSemesters();
+        ArrayList<Course> courses = new ArrayList<>();
         DecimalFormat df2 = new DecimalFormat("#.##");
 
         double totalEcts = 0;
         int count = 0;
-        int[] semesterCount = new int[SEMESTER];
         try {
             JsonNode node = new ObjectMapper().readTree(gradesJSON);
             JsonNode studentCourses = node.get("studentCourses");
@@ -78,24 +75,11 @@ public class Parser {
                 grades.setTotalAverageGrade("-");
                 grades.setTotalPassedCourses("0");
                 grades.setTotalEcts("0");
-                grades.setSemesters(new ArrayList<>());
+                grades.setCourses(new ArrayList<>());
                 return grades;
             }
 
             for (JsonNode courseJSON: studentCourses)  {
-                JsonNode semesterId = courseJSON.get("semesterId");
-                int studentSemester = semesterId.get("sortOrder").asInt();
-                if (studentSemester == 253 || studentSemester == 254)
-                    studentSemester = 7;
-                if (studentSemester == 255)
-                    studentSemester = 13;
-                if (studentSemester == 251)
-                    studentSemester = 14;
-                if (studentSemester == 252)
-                    studentSemester = 15;
-                Semester semester = semesters.get(studentSemester-1);
-                semester.setId(studentSemester);
-
                 Course course = new Course();
                 String id = courseJSON.get("courseCode").asText();
                 course.setId(id);
@@ -104,11 +88,10 @@ public class Parser {
                 course.setName(name);
 
                 double grade = 0;
-                if (courseJSON.get("grade").isNull()) {
-                    course.setGrade("-");
-                } else {
+                if ((courseJSON.get("grade").asDouble() * 10) > 5) {
                     grade = courseJSON.get("grade").asDouble() * 10;
                     course.setGrade(df2.format(grade));
+                    courses.add(course);
                 }
 
                 String s = courseJSON.get("idFather").asText();
@@ -123,22 +106,12 @@ public class Parser {
                         }
                     }
                 }
-
-                semester.getCourses().add(course);
             }
-
-            ArrayList<Semester> found = new ArrayList<>();
-            for (Semester semester : semesters) {
-                if (semester.getId() == 0) {
-                    found.add(semester);
-                }
-            }
-            semesters.removeAll(found);
 
             grades.setTotalEcts(String.valueOf(Math.ceil(totalEcts)).replace(".0", "").replace(",0", ""));
             grades.setTotalAverageGrade(totalAverageGrade);
             grades.setTotalPassedCourses(String.valueOf(count));
-            grades.setSemesters(semesters);
+            grades.setCourses(courses);
             return grades;
         } catch (IOException e) {
             logger.error("[" + PRE_LOG + "] Error: {}", e.getMessage(), e);
@@ -146,17 +119,6 @@ public class Parser {
             setDocument(gradesJSON);
             return null;
         }
-    }
-
-    private ArrayList<Semester> initSemesters() {
-        ArrayList<Semester> semesters = new ArrayList<>();
-        for (int i = 0; i <= SEMESTER; i++) {
-            Semester semester = new Semester();
-            ArrayList<Course> courses = new ArrayList<>();
-            semester.setCourses(courses);
-            semesters.add(semester);
-        }
-        return semesters;
     }
 
     public Student parseInfoAndGradesJSON(String infoJSON, String gradesJSON, String totalAverageGrade) {

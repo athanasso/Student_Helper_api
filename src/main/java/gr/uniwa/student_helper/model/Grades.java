@@ -7,17 +7,17 @@ public class Grades {
     private String totalPassedCourses;
     private String totalAverageGrade;
     private String totalEcts;
-    private ArrayList<Semester> semesters;
+    private ArrayList<Course> courses;
 
     public Grades() {
-        this.semesters = new ArrayList<>();
+        this.courses = new ArrayList<>();
     }
 
     public Grades(String totalPassedCourses, String totalAverageGrade, String totalEcts) {
         this.totalPassedCourses = totalPassedCourses;
         this.totalAverageGrade = totalAverageGrade;
         this.totalEcts = totalEcts;
-        this.semesters = new ArrayList<>();
+        this.courses = new ArrayList<>();
     }
 
     public String getTotalPassedCourses() {
@@ -44,11 +44,11 @@ public class Grades {
         this.totalEcts = totalEcts;
     }
 
-    public ArrayList<Semester> getSemesters() {
-        return semesters;
+    public ArrayList<Course> getCourses() {
+        return courses;
     }
 
-    public void setSemesters(ArrayList<Semester> semesters) {
-        this.semesters = semesters;
+    public void setCourses(ArrayList<Course> semesters) {
+        this.courses = semesters;
     }
 }
