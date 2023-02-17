@@ -2,7 +2,7 @@ package gr.uniwa.student_helper.model;
 
 public class Info {
 
-    private String aem;
+    private String am;
     private String firstName;
     private String lastName;
     private String department;
@@ -13,8 +13,8 @@ public class Info {
     public Info() {
     }
 
-    public Info(String aem, String firstName, String lastName, String department, String semester, String registrationYear, String programTitle) {
-        this.aem = aem;
+    public Info(String am, String firstName, String lastName, String department, String semester, String registrationYear, String programTitle) {
+        this.am = am;
         this.firstName = firstName;
         this.lastName = lastName;
         this.department = department;
@@ -23,12 +23,12 @@ public class Info {
         this.programTitle = programTitle;
     }
 
-    public String getAem() {
-        return aem;
+    public String getAm() {
+        return am;
     }
 
-    public void setAem(String aem) {
-        this.aem = aem;
+    public void setAm(String am) {
+        this.am = am;
     }
 
     public String getFirstName() {

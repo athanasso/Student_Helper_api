@@ -29,8 +29,8 @@ public class Parser {
         try {
             JsonNode student = new ObjectMapper().readTree(infoJSON);
 
-            String aem = student.get("studentNo").asText();
-            info.setAem(aem);
+            String am = student.get("studentNo").asText();
+            info.setAm(am);
 
             String firstName = student.get("lastName").asText();
             info.setFirstName(firstName);
