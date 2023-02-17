@@ -120,29 +120,12 @@ public class Parser {
                             count++;
                             double ects = courseJSON.get("ects").asDouble();
                             totalEcts += ects;
-
-                            int semesterEcts = Integer.parseInt(semester.getEcts());
-                            semesterEcts += ects;
-                            semester.setEcts(String.valueOf(semesterEcts));
-
-                            if (semester.getGradeAverage().equals("-")) {
-                                semester.setGradeAverage(String.valueOf(grade));
-                                semesterCount[studentSemester-1] = 1;
-                            } else {
-                                double semesterAverageGrade = Double.parseDouble(semester.getGradeAverage());
-                                semesterAverageGrade += grade;
-                                semester.setGradeAverage(String.valueOf(semesterAverageGrade));
-                                semesterCount[studentSemester-1]++;
-                            }
                         }
                     }
                 }
 
                 semester.getCourses().add(course);
             }
-
-            for (int i = 0; i < SEMESTER; i++)
-                semesters.get(i).setPassedCourses(semesterCount[i]);
 
             ArrayList<Semester> found = new ArrayList<>();
             for (Semester semester : semesters) {
@@ -151,16 +134,6 @@ public class Parser {
                 }
             }
             semesters.removeAll(found);
-
-            for (int i = 0; i < semesters.size(); i++) {
-                if (semesters.get(i).getGradeAverage().equals("-")) {
-                    semesters.get(i).setPassedCourses(0);
-                    continue;
-                }
-                double semesterSum = Double.parseDouble(semesters.get(i).getGradeAverage());
-                int semesterPassedCourses = semesters.get(i).getPassedCourses();
-                semesters.get(i).setGradeAverage(df2.format(semesterSum/semesterPassedCourses));
-            }
 
             grades.setTotalEcts(String.valueOf(Math.ceil(totalEcts)).replace(".0", "").replace(",0", ""));
             grades.setTotalAverageGrade(totalAverageGrade);
@@ -181,8 +154,6 @@ public class Parser {
             Semester semester = new Semester();
             ArrayList<Course> courses = new ArrayList<>();
             semester.setCourses(courses);
-            semester.setEcts("0");
-            semester.setGradeAverage("-");
             semesters.add(semester);
         }
         return semesters;

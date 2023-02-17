@@ -5,20 +5,14 @@ import java.util.ArrayList;
 public class Semester {
 
     private int id;
-    private int passedCourses;
-    private String gradeAverage;
-    private String ects;
     private ArrayList<Course> courses;
 
     public Semester() {
         this.courses = new ArrayList<>();
     }
 
-    public Semester(int id, int passedCourses, String gradeAverage, String ects) {
+    public Semester(int id) {
         this.id = id;
-        this.passedCourses = passedCourses;
-        this.gradeAverage = gradeAverage;
-        this.ects = ects;
         this.courses = new ArrayList<>();
     }
 
@@ -28,30 +22,6 @@ public class Semester {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getPassedCourses() {
-        return passedCourses;
-    }
-
-    public void setPassedCourses(int passedCourses) {
-        this.passedCourses = passedCourses;
-    }
-
-    public String getGradeAverage() {
-        return gradeAverage;
-    }
-
-    public void setGradeAverage(String gradeAverage) {
-        this.gradeAverage = gradeAverage;
-    }
-
-    public String getEcts() {
-        return ects;
-    }
-
-    public void setEcts(String ects) {
-        this.ects = ects;
     }
 
     public ArrayList<Course> getCourses() {
