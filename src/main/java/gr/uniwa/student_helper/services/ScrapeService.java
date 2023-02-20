@@ -6,8 +6,12 @@ import gr.uniwa.student_helper.model.LoginForm;
 import gr.uniwa.student_helper.model.Student;
 import gr.uniwa.student_helper.parser.Parser;
 import gr.uniwa.student_helper.scraper.Scraper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ScrapeService {
+    
+    private final Logger logger = LoggerFactory.getLogger(ScrapeService.class);
 
     public RestApiResult getStudent(String university, LoginForm loginForm) {
         return getUniwaStudent(loginForm, university, null, "services.uniwa.gr");
@@ -20,11 +24,13 @@ public class ScrapeService {
 
             // check for connection errors
             if (!scraper.isConnected()) {
+                logger.warn("scraper isn't connected");
                 return new RestApiResult<>(null,408,"Request Timeout");
             }
 
             // authorization check
             if (!scraper.isAuthorized()) {
+                logger.warn("scraper isn't authorized");
                 return new RestApiResult<>(null,401,"Unauthorized");
             }
 
@@ -34,6 +40,7 @@ public class ScrapeService {
 
             // check for internal errors
             if (infoJSON == null || gradesJSON == null || totalAverageGrade == null) {
+                logger.warn("Internal Server Error");
                 return new RestApiResult<>(null,500,"Internal Server Error"); 
             }
 
@@ -41,6 +48,7 @@ public class ScrapeService {
             Student student = parser.parseInfoAndGradesJSON(infoJSON, gradesJSON, totalAverageGrade);
 
             if (student == null) {
+                logger.warn("Internal Server Error");
                 return new RestApiResult<>(null,500,"Internal Server Error");
             }
 
