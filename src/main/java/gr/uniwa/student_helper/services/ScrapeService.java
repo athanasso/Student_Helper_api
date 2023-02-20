@@ -52,7 +52,7 @@ public class ScrapeService {
                 return new RestApiResult<>(null,500,"Internal Server Error");
             }
 
-            StudentDTO studentDTO = new StudentDTO(system, scraper.getCookies(), student);
+            StudentDTO studentDTO = new StudentDTO(scraper.getCookies(), student);
 
             return new RestApiResult<>(studentDTO,200,"Successful");
         } catch (Exception e){
