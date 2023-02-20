@@ -7,6 +7,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +26,7 @@ public class JavaEE8Resource {
             return scrapeService.getStudent("uniwa", loginForm);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new RestApiResult<>(null,400,"Bad Request");
+            return new RestApiResult<>(new ArrayList<>(),400,"Bad Request");
         }
     }
 }

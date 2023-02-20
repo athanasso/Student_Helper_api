@@ -6,6 +6,8 @@ import gr.uniwa.student_helper.model.LoginForm;
 import gr.uniwa.student_helper.model.Student;
 import gr.uniwa.student_helper.parser.Parser;
 import gr.uniwa.student_helper.scraper.Scraper;
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,17 +23,18 @@ public class ScrapeService {
         try{
             // scrap info page
             Scraper scraper = new Scraper(loginForm, university, system, domain);
+            List empty = new ArrayList<>();
 
             // check for connection errors
             if (!scraper.isConnected()) {
                 logger.warn("scraper isn't connected");
-                return new RestApiResult<>(null,408,"Request Timeout");
+                return new RestApiResult<>(empty,408,"Request Timeout");
             }
 
             // authorization check
             if (!scraper.isAuthorized()) {
                 logger.warn("scraper isn't authorized");
-                return new RestApiResult<>(null,401,"Unauthorized");
+                return new RestApiResult<>(empty,401,"Unauthorized");
             }
 
             String infoJSON = scraper.getInfoJSON();
@@ -41,7 +44,7 @@ public class ScrapeService {
             // check for internal errors
             if (infoJSON == null || gradesJSON == null || totalAverageGrade == null) {
                 logger.warn("Internal Server Error");
-                return new RestApiResult<>(null,500,"Internal Server Error"); 
+                return new RestApiResult<>(empty,500,"Internal Server Error"); 
             }
 
             Parser parser = new Parser(university, system);
@@ -49,14 +52,14 @@ public class ScrapeService {
 
             if (student == null) {
                 logger.warn("Internal Server Error");
-                return new RestApiResult<>(null,500,"Internal Server Error");
+                return new RestApiResult<>(empty,500,"Internal Server Error");
             }
 
             StudentDTO studentDTO = new StudentDTO(scraper.getCookies(), student);
 
             return new RestApiResult<>(studentDTO,200,"Successful");
         } catch (Exception e){
-            return new RestApiResult<>(null,400,"Bad Request");
+            return new RestApiResult<>(new ArrayList<>(),400,"Bad Request");
         }
     }
 }
