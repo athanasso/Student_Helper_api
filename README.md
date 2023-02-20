@@ -1,2 +1,3 @@
 # Student Helper
  
+## This is the API that facilitates the retrieval of information from the University of West Attica's department page. Upon successful authentication using your school-provided username and password, you can obtain valuable data, including student information and completed courses.
