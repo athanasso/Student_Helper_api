@@ -87,7 +87,7 @@ public class Parser {
                 String name = courseJSON.get("title").asText();
                 course.setName(name);
                 double grade = 0;
-                if ((courseJSON.get("grade").asDouble() * 10) > 5) {
+                if ((courseJSON.get("grade").asDouble() * 10) >= 5) {
                     grade = courseJSON.get("grade").asDouble() * 10;
                     course.setGrade(df2.format(grade));
                     courses.add(course);
