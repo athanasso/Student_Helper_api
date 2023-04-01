@@ -4,7 +4,8 @@ import gr.uniwa.student_helper.dto.RestApiResult;
 import gr.uniwa.student_helper.model.LoginForm;
 import gr.uniwa.student_helper.services.ScrapeService;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import java.util.ArrayList;
@@ -20,7 +21,8 @@ public class JavaEE8Resource {
     private final Logger logger = LoggerFactory.getLogger(JavaEE8Resource.class);
 
     @Produces("application/json")
-    @GET
+    @Consumes("application/json")
+    @POST
     public RestApiResult getStudent(LoginForm loginForm) {
         try {
             return scrapeService.getStudent("uniwa", loginForm);
