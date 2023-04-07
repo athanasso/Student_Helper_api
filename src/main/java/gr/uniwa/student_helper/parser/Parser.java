@@ -49,7 +49,10 @@ public class Parser {
 
             int currentSemester = student.get("lastSemester").asInt();
             info.setCurrentSemester((currentSemester == 0) ? "1" : String.valueOf(currentSemester));
-
+            
+            int deletionYear = calculateYearOfDeletion(curriculum, Integer.parseInt(registrationYear));
+            info.setDeletionYear(Integer.toString(deletionYear-1)+"-"+Integer.toString(deletionYear));
+            
             return info;
         } catch (IOException e) {
             logger.error("[" + PRE_LOG + "] Error: {}", e.getMessage(), e);
@@ -141,6 +144,20 @@ public class Parser {
             setDocument(gradesJSON + "\n\n======\n\n" + totalAverageGrade);
             return null;
         }
+    }
+    
+    private int calculateYearOfDeletion (String curriculum, int registrationYear)  {
+        if (curriculum.equals("ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)")){
+            if (registrationYear<2015) return 2026;
+            if (registrationYear<2021) return 2029;
+            if (registrationYear>=2022) return registrationYear+8;
+        }
+        else {
+            if (registrationYear<=2016) return 2025;
+            if (registrationYear<2021) return 2027;
+            if (registrationYear>=2022) return registrationYear+6;
+        }
+        return -1;
     }
 
     private void setDocument(String document) {

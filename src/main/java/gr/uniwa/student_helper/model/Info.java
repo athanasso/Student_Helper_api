@@ -9,11 +9,12 @@ public class Info {
     private String currentSemester;
     private String registrationYear;
     private String curriculum;
+    private String deletionYear;
 
     public Info() {
     }
 
-    public Info(String am, String firstName, String lastName, String department, String semester, String registrationYear, String curriculum) {
+    public Info(String am, String firstName, String lastName, String department, String semester, String registrationYear, String curriculum, String deletionYear) {
         this.am = am;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -21,6 +22,7 @@ public class Info {
         this.currentSemester = semester;
         this.registrationYear = registrationYear;
         this.curriculum = curriculum;
+        this.deletionYear = deletionYear;
     }
 
     public String getAm() {
@@ -77,5 +79,13 @@ public class Info {
 
     public void setCurriculum(String curriculum) {
         this.curriculum = curriculum;
+    }
+
+    public String getDeletionYear() {
+        return deletionYear;
+    }
+
+    public void setDeletionYear(String deletionYear) {
+        this.deletionYear = deletionYear;
     }
 }
