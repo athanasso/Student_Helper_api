@@ -52,7 +52,7 @@ public class ScrapeService {
                 return Response.status(500);
             }
 
-            StudentDTO studentDTO = new StudentDTO(scraper.getCookies(), student);
+            StudentDTO studentDTO = new StudentDTO(student);
 
             return Response.ok(studentDTO);
         } catch (Exception e){
