@@ -18,6 +18,7 @@ public class Parser {
     private String document;
     private final String PRE_LOG;
     private final Logger logger = LoggerFactory.getLogger(Parser.class);
+    private String curriculum;
 
     public Parser(String university, String system) {
         this.PRE_LOG = university + (system == null ? "" : "." + system);
@@ -46,6 +47,7 @@ public class Parser {
             
             String curriculum = student.get("programTitle").asText();
             info.setCurriculum(curriculum);
+            this.setCurriculum(curriculum);
 
             int currentSemester = student.get("lastSemester").asInt();
             info.setCurrentSemester((currentSemester == 0) ? "1" : String.valueOf(currentSemester));
@@ -113,7 +115,7 @@ public class Parser {
             grades.setTotalEcts(String.valueOf(Math.ceil(totalEcts)).replace(".0", "").replace(",0", ""));
             grades.setTotalAverageGrade(totalAverageGrade);
             grades.setTotalPassedCourses(String.valueOf(count));
-            grades.setCourses(courses);
+            grades.setCourses(calculateCourses(courses, this.getCurriculum()));
             return grades;
         } catch (IOException e) {
             logger.error("[" + PRE_LOG + "] Error: {}", e.getMessage(), e);
@@ -158,6 +160,27 @@ public class Parser {
             if (registrationYear>=2022) return registrationYear+6;
         }
         return -1;
+    }
+    
+    private ArrayList<Course> calculateCourses(ArrayList<Course> courses, String curriculum) {
+        ArrayList<Course> filteredCourses = new ArrayList<>();
+        if (curriculum.equals("ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)")) {
+            for (Course course : courses) {
+                if (course.getId().contains("ICE1")) {
+                    filteredCourses.add(course);
+                }
+            }
+            return filteredCourses;
+        }
+        return courses;
+    }
+    
+     private void setCurriculum(String curriculum) {
+        this.curriculum = curriculum;
+    }
+     
+     private String getCurriculum() {
+        return this.curriculum;
     }
 
     private void setDocument(String document) {
