@@ -1,6 +1,6 @@
 package gr.uniwa.student_helper.resources;
 
-import gr.uniwa.student_helper.dto.RestApiResult;
+
 import gr.uniwa.student_helper.model.LoginForm;
 import gr.uniwa.student_helper.services.ScrapeService;
 import jakarta.inject.Inject;
@@ -8,7 +8,8 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import java.util.ArrayList;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,12 +24,13 @@ public class JavaEE8Resource {
     @Produces("application/json")
     @Consumes("application/json")
     @POST
-    public RestApiResult getStudent(LoginForm loginForm) {
+    public Response getStudent(LoginForm loginForm) {
         try {
-            return scrapeService.getStudent("uniwa", loginForm);
+            ResponseBuilder responseBuilder = scrapeService.getStudent("uniwa", loginForm);
+            return responseBuilder.build();
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new RestApiResult<>(new ArrayList<>(),400,"Bad Request");
+            return Response.status(400).build();
         }
     }
 }
