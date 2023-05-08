@@ -102,7 +102,7 @@ public class UtilFunctions {
                     choiceCoursesFromSameBasicNeeded = 5 - choiceCoursesFromSameBasicLeft.size();
                 }
                 choiceCoursesFromOtherBasicLeft = combineCourseArrays(basic2CoursesJson, basic3CoursesJson, choice2CoursesJson, choice3CoursesJson, generalCoursesJson);
-                choiceCoursesFromOtherBasicAvailable = countCoursesInTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);//check if correct?
+                choiceCoursesFromOtherBasicAvailable = 8-countCoursesInTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);//check if correct?
                 if (choiceCoursesFromOtherBasicAvailable == 0) {
                     choiceCoursesFromOtherBasicAvailable = 7;
                 }
@@ -112,7 +112,7 @@ public class UtilFunctions {
                     choiceCoursesFromSameBasicNeeded = 5 - choiceCoursesFromSameBasicLeft.size();
                 }
                 choiceCoursesFromOtherBasicLeft = combineCourseArrays(basic1CoursesJson, basic3CoursesJson, choice1CoursesJson, choice3CoursesJson, generalCoursesJson);
-                choiceCoursesFromOtherBasicAvailable = countCoursesInTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);//check if correct?
+                choiceCoursesFromOtherBasicAvailable = 8-countCoursesInTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);//check if correct?
                 if (choiceCoursesFromOtherBasicAvailable == 0) {
                     choiceCoursesFromOtherBasicAvailable = 7;
                 }
@@ -122,7 +122,7 @@ public class UtilFunctions {
                     choiceCoursesFromSameBasicNeeded = 5 - choiceCoursesFromSameBasicLeft.size();
                 }
                 choiceCoursesFromOtherBasicLeft = combineCourseArrays(basic1CoursesJson, basic2CoursesJson, choice1CoursesJson, choice2CoursesJson, generalCoursesJson);
-                choiceCoursesFromOtherBasicAvailable = countCoursesInTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);//check if correct?
+                choiceCoursesFromOtherBasicAvailable = 8-countCoursesInTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);//check if correct?
                 if (choiceCoursesFromOtherBasicAvailable == 0) {
                     choiceCoursesFromOtherBasicAvailable = 7;
                 }
