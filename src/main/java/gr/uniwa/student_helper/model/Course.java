@@ -14,6 +14,12 @@ public class Course {
         this.name = name;
         this.grade = grade;
     }
+    
+    public Course(String id, String name) {
+        this.id = id;
+        this.name = name;
+        this.grade = "NA";
+    }
 
     public String getId() {
         return id;
