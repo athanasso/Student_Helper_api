@@ -69,7 +69,7 @@ public class UtilFunctions {
         int basicCoursesNeeded = 0;
         int choiceCoursesFromSameBasicNeeded = 0;
         ArrayList<Course> choiceCoursesFromSameBasicLeft = new ArrayList<>();
-        int choiceCoursesFromOtherBasicAvailable = 0;
+        int choiceCoursesFromOtherBasicAvailable = 7;
         ArrayList<Course> choiceCoursesFromOtherBasicLeft = new ArrayList<>();
         int generalCoursesPassed = 0;
         ArrayList<Course> generalCoursesLeft = new ArrayList<>();
@@ -103,12 +103,12 @@ public class UtilFunctions {
                     choiceCoursesFromSameBasicNeeded = 5 - choiceCoursesFromSameBasicLeft.size();
                 }
                 ArrayList<JSONArray> array = new ArrayList<>();
-                array.addAll(Arrays.asList(basic2CoursesJson, basic3CoursesJson, choice2CoursesJson, choice3CoursesJson));
+                array.addAll(Arrays.asList(basic2CoursesJson, basic3CoursesJson, choice2CoursesJson, choice3CoursesJson, generalCoursesJson));
                 
                 choiceCoursesFromOtherBasicLeft = combineCourseArrays(array);
-                choiceCoursesFromOtherBasicAvailable = 8-countCoursesInTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);
-                if (choiceCoursesFromOtherBasicAvailable == 0) {
-                    choiceCoursesFromOtherBasicAvailable = 7;
+                choiceCoursesFromOtherBasicAvailable = countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);
+                if (choiceCoursesFromOtherBasicAvailable < 0) {
+                    choiceCoursesFromOtherBasicAvailable = 0;
                 }
             } else if (containsAllBasicCourses(basic2CoursesJson, takenCourses)) {
                 choiceCoursesFromSameBasicLeft = getRemainingCourses(choice2CoursesJson, takenCourses);
@@ -119,9 +119,9 @@ public class UtilFunctions {
                 array.addAll(Arrays.asList(basic1CoursesJson, basic3CoursesJson, choice1CoursesJson, choice3CoursesJson, generalCoursesJson));
                 
                 choiceCoursesFromOtherBasicLeft = combineCourseArrays(array);
-                choiceCoursesFromOtherBasicAvailable = 8-countCoursesInTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);
-                if (choiceCoursesFromOtherBasicAvailable == 0) {
-                    choiceCoursesFromOtherBasicAvailable = 7;
+                choiceCoursesFromOtherBasicAvailable = countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);
+                if (choiceCoursesFromOtherBasicAvailable < 0) {
+                    choiceCoursesFromOtherBasicAvailable = 0;
                 }
             } else if ((containsAllBasicCourses(basic3CoursesJson, takenCourses))) {
                 choiceCoursesFromSameBasicLeft = getRemainingCourses(choice3CoursesJson, takenCourses);
@@ -132,9 +132,9 @@ public class UtilFunctions {
                 array.addAll(Arrays.asList(basic1CoursesJson, basic2CoursesJson, choice1CoursesJson, choice2CoursesJson, generalCoursesJson));
                 
                 choiceCoursesFromOtherBasicLeft = combineCourseArrays(array);
-                choiceCoursesFromOtherBasicAvailable = 8-countCoursesInTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);
-                if (choiceCoursesFromOtherBasicAvailable == 0) {
-                    choiceCoursesFromOtherBasicAvailable = 7;
+                choiceCoursesFromOtherBasicAvailable = countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);
+                if (choiceCoursesFromOtherBasicAvailable < 0) {
+                    choiceCoursesFromOtherBasicAvailable = 0;
                 }
             } else {
                 basicCoursesLeft = (countBasicCoursesLeft(basic1CoursesJson, basic2CoursesJson, basic3CoursesJson, takenCourses));
@@ -299,6 +299,18 @@ public class UtilFunctions {
         for (Course course : coursesList) {
             if (takenCourses.contains(course.getId())) {
                 count++;
+            }
+        }
+
+        return count;
+    }
+    
+    private static int countCoursesInOthersTakenCourses(ArrayList<Course> coursesList, Set<String> takenCourses) {
+        int count = 7;
+
+        for (Course course : coursesList) {
+            if (takenCourses.contains(course.getId())) {
+                count--;
             }
         }
 
