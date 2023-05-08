@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.Arrays;
 
 public class UtilFunctions {
 
@@ -101,8 +102,11 @@ public class UtilFunctions {
                 if (choiceCoursesFromSameBasicLeft.size() < 5) {
                     choiceCoursesFromSameBasicNeeded = 5 - choiceCoursesFromSameBasicLeft.size();
                 }
-                choiceCoursesFromOtherBasicLeft = combineCourseArrays(basic2CoursesJson, basic3CoursesJson, choice2CoursesJson, choice3CoursesJson, generalCoursesJson);
-                choiceCoursesFromOtherBasicAvailable = 8-countCoursesInTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);//check if correct?
+                ArrayList<JSONArray> array = new ArrayList<>();
+                array.addAll(Arrays.asList(basic2CoursesJson, basic3CoursesJson, choice2CoursesJson, choice3CoursesJson));
+                
+                choiceCoursesFromOtherBasicLeft = combineCourseArrays(array);
+                choiceCoursesFromOtherBasicAvailable = 8-countCoursesInTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);
                 if (choiceCoursesFromOtherBasicAvailable == 0) {
                     choiceCoursesFromOtherBasicAvailable = 7;
                 }
@@ -111,8 +115,11 @@ public class UtilFunctions {
                 if (choiceCoursesFromSameBasicLeft.size() < 5) {
                     choiceCoursesFromSameBasicNeeded = 5 - choiceCoursesFromSameBasicLeft.size();
                 }
-                choiceCoursesFromOtherBasicLeft = combineCourseArrays(basic1CoursesJson, basic3CoursesJson, choice1CoursesJson, choice3CoursesJson, generalCoursesJson);
-                choiceCoursesFromOtherBasicAvailable = 8-countCoursesInTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);//check if correct?
+                ArrayList<JSONArray> array = new ArrayList<>();
+                array.addAll(Arrays.asList(basic1CoursesJson, basic3CoursesJson, choice1CoursesJson, choice3CoursesJson, generalCoursesJson));
+                
+                choiceCoursesFromOtherBasicLeft = combineCourseArrays(array);
+                choiceCoursesFromOtherBasicAvailable = 8-countCoursesInTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);
                 if (choiceCoursesFromOtherBasicAvailable == 0) {
                     choiceCoursesFromOtherBasicAvailable = 7;
                 }
@@ -121,8 +128,11 @@ public class UtilFunctions {
                 if (choiceCoursesFromSameBasicLeft.size() < 5) {
                     choiceCoursesFromSameBasicNeeded = 5 - choiceCoursesFromSameBasicLeft.size();
                 }
-                choiceCoursesFromOtherBasicLeft = combineCourseArrays(basic1CoursesJson, basic2CoursesJson, choice1CoursesJson, choice2CoursesJson, generalCoursesJson);
-                choiceCoursesFromOtherBasicAvailable = 8-countCoursesInTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);//check if correct?
+                ArrayList<JSONArray> array = new ArrayList<>();
+                array.addAll(Arrays.asList(basic1CoursesJson, basic2CoursesJson, choice1CoursesJson, choice2CoursesJson, generalCoursesJson));
+                
+                choiceCoursesFromOtherBasicLeft = combineCourseArrays(array);
+                choiceCoursesFromOtherBasicAvailable = 8-countCoursesInTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);
                 if (choiceCoursesFromOtherBasicAvailable == 0) {
                     choiceCoursesFromOtherBasicAvailable = 7;
                 }
@@ -138,8 +148,9 @@ public class UtilFunctions {
             if (totalCourseCount == 55) {
                 result.setChoiceCoursesNeeded(0);
             } else {
-                //TODO
-                result.setChoiceCoursesNeeded(55 - takenCourses.size() + basicCoursesNeeded + choiceCoursesFromSameBasicNeeded);
+                ArrayList<JSONArray> array = new ArrayList<>();
+                array.addAll(Arrays.asList(basic1CoursesJson, basic2CoursesJson, basic3CoursesJson, choice1CoursesJson, choice2CoursesJson, choice3CoursesJson, generalCoursesJson));
+                result.setChoiceCoursesNeeded(16 - countCoursesInTakenCoursesFromJsonArrays(array, takenCourses));
             }
 
             generalCoursesLeft = getRemainingCourses(generalCoursesJson, takenCourses);
@@ -294,14 +305,12 @@ public class UtilFunctions {
         return count;
     }
 
-    private static ArrayList<Course> combineCourseArrays(JSONArray array1, JSONArray array2, JSONArray array3, JSONArray array4, JSONArray array5) {
+    private static ArrayList<Course> combineCourseArrays(ArrayList<JSONArray> arrays) {
         ArrayList<Course> combinedCourses = new ArrayList<>();
 
-        addCoursesToList(combinedCourses, array1);
-        addCoursesToList(combinedCourses, array2);
-        addCoursesToList(combinedCourses, array3);
-        addCoursesToList(combinedCourses, array4);
-        addCoursesToList(combinedCourses, array5);
+        for (JSONArray array : arrays) {
+            addCoursesToList(combinedCourses, array);
+        }
 
         return combinedCourses;
     }
@@ -328,4 +337,24 @@ public class UtilFunctions {
         }
         return takenCourses;
     }
+    
+    private static int countCoursesInTakenCoursesFromJsonArrays(ArrayList<JSONArray> coursesJsonArrays, Set<String> takenCourses) {
+        int count = 0;
+        int generalCount = 0;
+
+        for (JSONArray coursesJson : coursesJsonArrays) {
+            if (coursesJson.equals("generalCoursesJson")) {
+                // Count the number of general courses taken separately
+                generalCount = countCoursesInTakenCourses(coursesJson, takenCourses);
+            } else {
+                count += countCoursesInTakenCourses(coursesJson, takenCourses);
+            }
+        }
+
+        // Limit the count of general courses to a maximum of 2
+        count += Math.min(generalCount, 2);
+
+        return count;
+    }
+
 }
