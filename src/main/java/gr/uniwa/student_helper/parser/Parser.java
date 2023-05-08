@@ -21,7 +21,6 @@ public class Parser {
     private final String PRE_LOG;
     private final Logger logger = LoggerFactory.getLogger(Parser.class);
     private String curriculum;
-    private static UtilFunctions utilFunctions;
 
     public Parser(String university, String system) {
         this.PRE_LOG = university + (system == null ? "" : "." + system);
@@ -55,7 +54,7 @@ public class Parser {
             int currentSemester = student.get("lastSemester").asInt();
             info.setCurrentSemester((currentSemester == 0) ? "1" : String.valueOf(currentSemester));
 
-            int deletionYear = utilFunctions.calculateYearOfDeletion(curriculum, Integer.parseInt(registrationYear));
+            int deletionYear = UtilFunctions.calculateYearOfDeletion(curriculum, Integer.parseInt(registrationYear));
             info.setDeletionYear(Integer.toString(deletionYear - 1) + "-" + Integer.toString(deletionYear));
 
             return info;
@@ -120,7 +119,9 @@ public class Parser {
             grades.setTotalEcts(String.valueOf(Math.ceil(totalEcts)).replace(".0", "").replace(",0", ""));
             grades.setTotalAverageGrade(totalAverageGrade);
             grades.setTotalPassedCourses(String.valueOf(count));
-            grades.setCourses(utilFunctions.calculateCourses(courses, this.getCurriculum()));
+            grades.setCourses(UtilFunctions.calculateCourses(courses, this.getCurriculum()));
+            grades.setNeededCourses(UtilFunctions.calculateNeededCourses(grades.getCourses(), this.getCurriculum()));
+            
             return grades;
         } catch (IOException e) {
             logger.error("[" + PRE_LOG + "] Error: {}", e.getMessage(), e);

@@ -1,7 +1,6 @@
 package gr.uniwa.student_helper.dto;
 
 import gr.uniwa.student_helper.model.Student;
-import java.util.Map;
 
 public class StudentDTO {
     private Student student;
