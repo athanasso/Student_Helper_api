@@ -15,6 +15,7 @@ public class NeededCourses {
     private ArrayList<Course> choiceCoursesFromOtherBasicLeft;
     private int generalCoursesPassed;
     private ArrayList<Course> generalCoursesLeft;
+    private boolean passedAll;
 
     public NeededCourses() {
         this.choiceCoursesNeeded = 0;
@@ -28,6 +29,7 @@ public class NeededCourses {
         this.generalCoursesLeft =  new ArrayList<>();
         this.basicCoursesNeeded = 0;
         this.basicCoursesLeft = new ArrayList<>();
+        this.passedAll = false;
     }
 
     public int getChoiceCoursesNeeded() {
@@ -118,4 +120,11 @@ public class NeededCourses {
         this.generalCoursesLeft = generalCoursesLeft;
     }
 
+    public boolean isPassedAll() {
+        return passedAll;
+    }
+
+    public void setPassedAll(boolean passedAll) {
+        this.passedAll = passedAll;
+    }
 }
