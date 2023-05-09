@@ -167,6 +167,8 @@ public class UtilFunctions {
         result.setChoiceCoursesFromOtherBasicAvailable(choiceCoursesFromOtherBasicAvailable);
         result.setGeneralCoursesPassed(generalCoursesPassed);
         result.setGeneralCoursesLeft(generalCoursesLeft);
+        
+        logger.debug("calculated courses");
 
         return result;
     }
@@ -179,9 +181,10 @@ public class UtilFunctions {
             String jsonContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
             // Parse the JSON string
             JSONObject curriculumJson = new JSONObject(jsonContent);
+            logger.debug("file read");
             return curriculumJson;
         } catch (IOException e) {
-            logger.debug(e.getMessage());
+            logger.error(e.getMessage(), e);
         }
         return null;
     }

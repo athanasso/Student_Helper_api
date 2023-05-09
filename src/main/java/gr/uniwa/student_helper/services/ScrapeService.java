@@ -53,9 +53,11 @@ public class ScrapeService {
             }
 
             StudentDTO studentDTO = new StudentDTO(student);
-
+            logger.debug("student read");
+            
             return Response.ok(studentDTO);
         } catch (Exception e){
+            logger.error(e.getMessage(), e);
             return Response.status(400);
         }
     }
