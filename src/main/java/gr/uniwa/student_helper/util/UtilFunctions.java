@@ -114,7 +114,7 @@ public class UtilFunctions {
                 }
                 
                 choiceCoursesFromOtherBasicLeft = combineCourseArrays(array);
-                choiceCoursesFromOtherBasicAvailable = countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);
+                choiceCoursesFromOtherBasicAvailable = countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses) - generalCoursesPassed;
                 if (choiceCoursesFromOtherBasicAvailable < 0) {
                     choiceCoursesFromOtherBasicAvailable = 0;
                 }
@@ -131,7 +131,7 @@ public class UtilFunctions {
                 }
                 
                 choiceCoursesFromOtherBasicLeft = combineCourseArrays(array);
-                choiceCoursesFromOtherBasicAvailable = countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);
+                choiceCoursesFromOtherBasicAvailable = countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses) - generalCoursesPassed;
                 if (choiceCoursesFromOtherBasicAvailable < 0) {
                     choiceCoursesFromOtherBasicAvailable = 0;
                 }
@@ -148,7 +148,7 @@ public class UtilFunctions {
                  }
                 
                 choiceCoursesFromOtherBasicLeft = combineCourseArrays(array);
-                choiceCoursesFromOtherBasicAvailable = countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses);
+                choiceCoursesFromOtherBasicAvailable = countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses) - generalCoursesPassed;
                 if (choiceCoursesFromOtherBasicAvailable < 0) {
                     choiceCoursesFromOtherBasicAvailable = 0;
                 }
