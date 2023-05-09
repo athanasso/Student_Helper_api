@@ -161,7 +161,7 @@ public class UtilFunctions {
                 choiceCoursesFromSameBasicNeeded = 5;
             }
 
-            if (totalCourseCount == 55 && !mandatoryCoursesLeft.isEmpty() &&  basicCoursesNeeded == 0) {
+            if (totalCourseCount == 55 && mandatoryCoursesLeft.isEmpty() &&  basicCoursesNeeded == 0) {
                 result.setChoiceCoursesNeeded(0);
                 passedAll = true;
             } else {
