@@ -25,23 +25,26 @@ public class UtilFunctions {
      *
      * @param curriculum
      * @param registrationYear
+     * @param partTime
      * @return  int
      * 
      */
-     public static int calculateYearOfDeletion (String curriculum, int registrationYear)  {
-        if (curriculum.equals("ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)")){
-            if (registrationYear<2015) return 2026;
-            if (registrationYear<2021) return 2029;
-            if (registrationYear>=2022) return registrationYear+8;
-        }
-        else {
-            if (registrationYear<=2016) return 2025;
-            if (registrationYear<2021) return 2027;
-            if (registrationYear>=2022) return registrationYear+6;
+    public static int calculateYearOfDeletion(String curriculum, int registrationYear, boolean partTime) {
+        if (!partTime) {
+            if (curriculum.equals("ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)")){
+                if (registrationYear<2015) return 2026;
+                if (registrationYear<2021) return 2029;
+                if (registrationYear>=2022) return registrationYear+8;
+            }
+            else {
+                if (registrationYear<=2016) return 2025;
+                if (registrationYear<2021) return 2027;
+                if (registrationYear>=2022) return registrationYear+6;
+            }
         }
         return -1;
     }
-    
+
     /**
      * Calculates the filtered courses
      *

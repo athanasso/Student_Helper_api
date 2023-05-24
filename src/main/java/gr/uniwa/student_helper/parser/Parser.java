@@ -50,11 +50,13 @@ public class Parser {
             String curriculum = student.get("programTitle").asText();
             info.setCurriculum(curriculum);
             this.setCurriculum(curriculum);
+            
+            boolean isPartTime = student.get("isPartTime").asBoolean();
 
             int currentSemester = student.get("lastSemester").asInt();
             info.setCurrentSemester((currentSemester == 0) ? "1" : String.valueOf(currentSemester));
 
-            int deletionYear = UtilFunctions.calculateYearOfDeletion(curriculum, Integer.parseInt(registrationYear));
+            int deletionYear = UtilFunctions.calculateYearOfDeletion(curriculum, Integer.parseInt(registrationYear), isPartTime);
             info.setDeletionYear(Integer.toString(deletionYear - 1) + "-" + Integer.toString(deletionYear));
 
             return info;
