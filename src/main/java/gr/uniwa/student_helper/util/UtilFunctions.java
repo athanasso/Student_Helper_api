@@ -51,19 +51,21 @@ public class UtilFunctions {
      *
      */
     public static ArrayList<Course> calculateCourses(ArrayList<Course> courses, String curriculum) {
-        ArrayList<Course> filteredCourses = new ArrayList<>();
+
         switch (curriculum) {
             case "ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)" -> {
-                for (Course course : courses) {
-                    if (course.getId().contains("ICE1")) {
-                        filteredCourses.add(course);
-                    }
-                }
-                return filteredCourses;
+                return filterCourses(courses, "ICE1");
             }
             case "Υπό Εφαρμογή - Νέο Πρόγραμμα Σπουδών (από 20/9/2014)" -> {
+                return filterCourses(courses, "N2");
+            }
+            case "Νέο Πρόγραμμα Σπουδών (από 20/9/2010)" -> {
+                return filterCourses(courses, "N1");
+            }
+            case "2017 - ΝΕΟ [24]" -> {
+                ArrayList<Course> filteredCourses = new ArrayList<>();
                 for (Course course : courses) {
-                    if (course.getId().contains("N2")) {
+                    if (course.getId().length() >= 6 && course.getId().length() <= 8) {
                         filteredCourses.add(course);
                     }
                 }
@@ -76,6 +78,16 @@ public class UtilFunctions {
         return courses;
     }
 
+    private static ArrayList<Course> filterCourses(ArrayList<Course> courses, String code) {
+        ArrayList<Course> filteredCourses = new ArrayList<>();
+        for (Course course : courses) {
+            if (course.getId().contains(code)) {
+                filteredCourses.add(course);
+            }
+        }
+        return filteredCourses;
+    }
+
     public static NeededCourses calculateNeededCourses(ArrayList<Course> courses, String curriculum) {
         switch (curriculum) {
             case "ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)" -> {
@@ -83,6 +95,12 @@ public class UtilFunctions {
             }
             case "Υπό Εφαρμογή - Νέο Πρόγραμμα Σπουδών (από 20/9/2014)" -> {
                 return calculateN2(courses);
+            }
+            case "Νέο Πρόγραμμα Σπουδών (από 20/9/2010)" -> {
+                return calculateN1(courses);
+            }
+            case "2017 - ΝΕΟ [24]" -> {
+                return calculatePeir(courses);
             }
             default ->
                 logger.error("Error: couldn't calculate courses");
@@ -214,6 +232,14 @@ public class UtilFunctions {
     }
     
     private static NeededCourses calculateN2(ArrayList<Course> courses) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
+    private static NeededCourses calculateN1(ArrayList<Course> courses) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private static NeededCourses calculatePeir(ArrayList<Course> courses) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
