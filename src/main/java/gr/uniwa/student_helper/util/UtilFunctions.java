@@ -84,7 +84,7 @@ public class UtilFunctions {
     private static ArrayList<Course> filterCourses(ArrayList<Course> courses, String code) {
         ArrayList<Course> filteredCourses = new ArrayList<>();
         for (Course course : courses) {
-            if (course.getId().contains(code)) {
+            if (course.getId().matches(code+"-\\d{4}")) {
                 filteredCourses.add(course);
             }
         }
