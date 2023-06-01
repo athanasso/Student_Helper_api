@@ -287,7 +287,53 @@ public class UtilFunctions {
     }
 
     private static NeededCoursesPeir calculatePeir(ArrayList<Course> courses) {
+        NeededCoursesPeir result = new NeededCoursesPeir();
         
+        ArrayList<Course> mandatoryCoursesLeft = new ArrayList<>();
+        int choiceCourses1Needed = 1;
+        ArrayList<Course> choiceCourses1Left = new ArrayList<>();
+        int choiceCourses2Needed = 1;
+        ArrayList<Course> choiceCourses2Left = new ArrayList<>();
+        int choiceCourses3Needed = 2;
+        ArrayList<Course> choiceCourses3Left = new ArrayList<>();
+        boolean passedAll = false;
+
+        JSONObject curriculumJson = readJson("peir.json");
+
+        JSONArray mandatoryCoursesJson = curriculumJson.getJSONArray("mandatory");
+        JSONArray choice1CoursesJson = curriculumJson.getJSONArray("choice1");
+        JSONArray choice2CoursesJson = curriculumJson.getJSONArray("choice2");
+        JSONArray choice3CoursesJson = curriculumJson.getJSONArray("choice3");
+
+        Set<String> takenCourses = createTakenCoursesSet(courses);
+
+        addCoursesToList(mandatoryCoursesLeft, mandatoryCoursesJson, takenCourses);
+        addCoursesToList(choiceCourses1Left, choice1CoursesJson, takenCourses);
+        addCoursesToList(choiceCourses2Left, choice2CoursesJson, takenCourses);
+        addCoursesToList(choiceCourses3Left, choice3CoursesJson, takenCourses);
+        
+        choiceCourses1Needed -= 4-choiceCourses1Left.size();
+        choiceCourses2Needed -= 5-choiceCourses2Left.size();
+        choiceCourses3Needed -= 5-choiceCourses3Left.size();
+        
+        if (choiceCourses1Needed<=0 && choiceCourses2Needed<=0 && choiceCourses3Needed<=0){
+            if (mandatoryCoursesLeft.isEmpty()) {
+                passedAll = true;
+            }
+            
+            choiceCourses1Needed=0;
+            choiceCourses2Needed=0;
+            choiceCourses3Needed=0;
+        }
+              
+        result.setMandatoryCoursesLeft(mandatoryCoursesLeft);
+        result.setMandatoryCoursesNeeded(mandatoryCoursesLeft.size());
+        result.setChoiceCourses1Left(choiceCourses1Left);
+        result.setChoiceCourses1Needed(choiceCourses1Needed);
+        result.setChoiceCourses2Left(choiceCourses2Left);
+        result.setMandatoryCoursesNeeded(choiceCourses2Needed);
+        result.setPassedAll(passedAll);
+        return result;
     }
 
     private static JSONObject readJson(String file) {
