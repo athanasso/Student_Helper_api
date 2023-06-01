@@ -242,11 +242,52 @@ public class UtilFunctions {
     }
     
     private static NeededCoursesN1 calculateN1(ArrayList<Course> courses) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        NeededCoursesN1 result = new NeededCoursesN1();
+        ArrayList<Course> mandatoryCoursesLeft = new ArrayList<>();
+        int choiceCourses1Needed = 2;
+        ArrayList<Course> choiceCourses1Left = new ArrayList<>();
+        int choiceCourses2Needed = 6;
+        ArrayList<Course> choiceCourses2Left = new ArrayList<>();
+        boolean passedAll = false;
+
+        JSONObject curriculumJson = readJson("N1.json");
+
+        JSONArray mandatoryCoursesJson = curriculumJson.getJSONArray("mandatory");
+        JSONArray choice1CoursesJson = curriculumJson.getJSONArray("choice1");
+        JSONArray choice2CoursesJson = curriculumJson.getJSONArray("choice2");
+
+        Set<String> takenCourses = createTakenCoursesSet(courses);
+
+        addCoursesToList(mandatoryCoursesLeft, mandatoryCoursesJson, takenCourses);
+        addCoursesToList(choiceCourses1Left, choice1CoursesJson, takenCourses);
+        addCoursesToList(choiceCourses2Left, choice2CoursesJson, takenCourses);
+        
+        choiceCourses1Needed -= 4-choiceCourses1Left.size();
+        choiceCourses2Needed -= 12-choiceCourses2Left.size();
+        
+        if (choiceCourses1Needed<=0 && choiceCourses2Needed<=0){
+            if (mandatoryCoursesLeft.isEmpty()) {
+                passedAll = true;
+            }
+            
+            choiceCourses1Needed=0;
+            choiceCourses2Needed=0;
+        }
+              
+        result.setMandatoryCoursesLeft(mandatoryCoursesLeft);
+        result.setMandatoryCoursesNeeded(mandatoryCoursesLeft.size());
+        result.setChoiceCourses1Left(choiceCourses1Left);
+        result.setChoiceCourses1Needed(choiceCourses1Needed);
+        result.setChoiceCourses2Left(choiceCourses2Left);
+        result.setChoiceCourses2Needed(choiceCourses2Needed);
+        result.setMandatoryCoursesNeeded(choiceCourses2Needed);
+        result.setPassedAll(passedAll);
+        return result;
     }
 
     private static NeededCoursesPeir calculatePeir(ArrayList<Course> courses) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
     }
 
     private static JSONObject readJson(String file) {
