@@ -1,7 +1,10 @@
 package gr.uniwa.student_helper.util;
 
 import gr.uniwa.student_helper.model.Course;
-import gr.uniwa.student_helper.model.NeededCourses;
+import gr.uniwa.student_helper.model.neededCourses.NeededCoursesICE1;
+import gr.uniwa.student_helper.model.neededCourses.NeededCoursesN1;
+import gr.uniwa.student_helper.model.neededCourses.NeededCoursesN2;
+import gr.uniwa.student_helper.model.neededCourses.NeededCoursesPeir;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -91,7 +94,7 @@ public class UtilFunctions {
         return filteredCourses;
     }
 
-    public static NeededCourses calculateNeededCourses(ArrayList<Course> courses, String curriculum) {
+    public static Object calculateNeededCourses(ArrayList<Course> courses, String curriculum) {
         switch (curriculum) {
             case "ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)" -> {
                 return calculateICE1(courses);
@@ -111,8 +114,8 @@ public class UtilFunctions {
         return null;
     }
 
-    private static NeededCourses calculateICE1(ArrayList<Course> courses) throws JSONException {
-        NeededCourses result = new NeededCourses();
+    private static NeededCoursesICE1 calculateICE1(ArrayList<Course> courses) throws JSONException {
+        NeededCoursesICE1 result = new NeededCoursesICE1();
         ArrayList<Course> mandatoryCoursesLeft = new ArrayList<>();
         ArrayList<Course> basicCoursesLeft = new ArrayList<>();
         int basicCoursesNeeded = 0;
@@ -234,15 +237,15 @@ public class UtilFunctions {
         return result;
     }
     
-    private static NeededCourses calculateN2(ArrayList<Course> courses) {
+    private static NeededCoursesN2 calculateN2(ArrayList<Course> courses) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
-    private static NeededCourses calculateN1(ArrayList<Course> courses) {
+    private static NeededCoursesN1 calculateN1(ArrayList<Course> courses) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    private static NeededCourses calculatePeir(ArrayList<Course> courses) {
+    private static NeededCoursesPeir calculatePeir(ArrayList<Course> courses) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

@@ -8,7 +8,7 @@ public class Grades {
     private String totalAverageGrade;
     private String totalEcts;
     private ArrayList<Course> courses;
-    private NeededCourses neededCourses;
+    private Object neededCourses;
             
     public Grades() {
         this.courses = new ArrayList<>();
@@ -53,11 +53,11 @@ public class Grades {
         this.courses = semesters;
     }
 
-    public NeededCourses getNeededCourses() {
+    public Object getNeededCourses() {
         return neededCourses;
     }
 
-    public void setNeededCourses(NeededCourses neededCourses) {
+    public void setNeededCourses(Object neededCourses) {
         this.neededCourses = neededCourses;
     }    
 }

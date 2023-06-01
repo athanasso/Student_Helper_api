@@ -1,8 +1,9 @@
-package gr.uniwa.student_helper.model;
+package gr.uniwa.student_helper.model.neededCourses;
 
+import gr.uniwa.student_helper.model.Course;
 import java.util.ArrayList;
 
-public class NeededCourses {
+public class NeededCoursesICE1 {
 
     private int choiceCoursesNeeded;
     private int mandatoryCoursesNeeded;
@@ -17,7 +18,7 @@ public class NeededCourses {
     private ArrayList<Course> generalCoursesLeft;
     private boolean passedAll;
 
-    public NeededCourses() {
+    public NeededCoursesICE1() {
         this.choiceCoursesNeeded = 0;
          this.mandatoryCoursesNeeded = 0;
         this.mandatoryCoursesLeft = new ArrayList<>();
