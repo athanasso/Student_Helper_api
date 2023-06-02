@@ -203,7 +203,7 @@ public class UtilFunctions {
                 choiceCoursesFromOtherBasicAvailable = 0;
             }
         } else {
-            basicCoursesLeft = (countBasicCoursesLeft(basic1CoursesJson, basic2CoursesJson, basic3CoursesJson, takenCourses));
+            basicCoursesLeft = (countBasicCoursesLeftICE1(basic1CoursesJson, basic2CoursesJson, basic3CoursesJson, takenCourses));
             basicCoursesNeeded = basicCoursesLeft.size();
             if (basicCoursesNeeded == 12) {
                 basicCoursesNeeded = 4;
@@ -238,7 +238,148 @@ public class UtilFunctions {
     }
     
     private static NeededCoursesN2 calculateN2(ArrayList<Course> courses) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        NeededCoursesN2 result = new NeededCoursesN2();
+        
+        ArrayList<Course> mandatoryCoursesLeft = new ArrayList<>();
+        int basicCoursesNeeded = 5;
+        ArrayList<Course> basicCoursesLeft = new ArrayList<>();
+        int choice1CoursesNeeded = 2;
+        ArrayList<Course> choice1CoursesLeft = new ArrayList<>();
+        int choice2CoursesNeeded = 4;
+        ArrayList<Course> choice2CoursesLeft = new ArrayList<>();
+        int choiceFromOthersBasicPassed = 0; //max2
+        ArrayList<Course> choiceFromOthersBasicAvailable = new ArrayList<>();
+        boolean passedAll = false;
+        
+        int coursesCount = 0;
+        
+        JSONObject curriculumJson = readJson("N2.json");
+        JSONArray mandatoryCoursesJson = curriculumJson.getJSONArray("mandatory");
+        JSONArray basic1CoursesJson = curriculumJson.getJSONArray("basic1");
+        JSONArray basic2CoursesJson = curriculumJson.getJSONArray("basic2");
+        JSONArray basic3CoursesJson = curriculumJson.getJSONArray("basic3");
+        JSONArray choice1_1CoursesJson = curriculumJson.getJSONArray("choice1_1");
+        JSONArray choice2_1CoursesJson = curriculumJson.getJSONArray("choice2_1");
+        JSONArray choice3_1CoursesJson = curriculumJson.getJSONArray("choice3_1");
+        JSONArray choice1_2CoursesJson = curriculumJson.getJSONArray("choice1_2");
+        JSONArray choice2_2CoursesJson = curriculumJson.getJSONArray("choice2_2");
+        JSONArray choice3_2CoursesJson = curriculumJson.getJSONArray("choice2_2");
+        
+        Set<String> takenCourses = createTakenCoursesSet(courses);
+        addCoursesToList(mandatoryCoursesLeft, mandatoryCoursesJson, takenCourses);
+        
+        int totalCourseCount = courses.size();
+        
+        if (containsAtLeastOneCourse(basic1CoursesJson,takenCourses)) {
+            coursesCount +=4;
+            choice1CoursesLeft = getRemainingCourses(choice1_1CoursesJson, takenCourses);
+            choice2CoursesLeft = getRemainingCourses(choice1_2CoursesJson, takenCourses);
+            
+            choice1CoursesNeeded = countPassed(choice1_1CoursesJson, takenCourses);
+            choice2CoursesNeeded = countPassed(choice1_2CoursesJson, takenCourses);
+            
+            if (choice1CoursesNeeded>=2){
+                coursesCount+=choice1CoursesNeeded;
+                choice1CoursesNeeded = 0;
+            }
+             if (choice2CoursesNeeded>=4){
+                 coursesCount+=choice2CoursesNeeded;
+                 choice2CoursesNeeded = 0;
+            }
+             
+            if (coursesCount<8){
+                ArrayList<JSONArray> array = new ArrayList<>();
+                array.addAll(Arrays.asList(choice2_1CoursesJson, choice3_1CoursesJson, choice2_2CoursesJson, choice3_2CoursesJson));
+                choiceFromOthersBasicAvailable = combineCourseArrays(array);
+                choiceFromOthersBasicPassed = countPassed(array, takenCourses);
+            }
+            
+            if (containsAllBasicCourses(basic1CoursesJson, takenCourses)){
+                coursesCount+=5;
+            }
+            
+        } else if (containsAtLeastOneCourse(basic2CoursesJson, takenCourses)) {
+            coursesCount +=4;
+            choice1CoursesLeft = getRemainingCourses(choice2_1CoursesJson, takenCourses);
+            choice2CoursesLeft = getRemainingCourses(choice2_2CoursesJson, takenCourses);
+            
+            choice1CoursesNeeded = countPassed(choice2_1CoursesJson, takenCourses);
+            choice2CoursesNeeded = countPassed(choice2_2CoursesJson, takenCourses);
+            
+            if (choice1CoursesNeeded>=2){
+                coursesCount+=choice1CoursesNeeded;
+                choice1CoursesNeeded = 0;
+            }
+             if (choice2CoursesNeeded>=4){
+                 coursesCount+=choice2CoursesNeeded;
+                 choice2CoursesNeeded = 0;
+            }
+             
+            if (coursesCount<8){
+                ArrayList<JSONArray> array = new ArrayList<>();
+                array.addAll(Arrays.asList(choice1_1CoursesJson, choice3_1CoursesJson, choice1_2CoursesJson, choice3_2CoursesJson));
+                choiceFromOthersBasicAvailable = combineCourseArrays(array);
+                choiceFromOthersBasicPassed = countPassed(array, takenCourses);
+            }
+            
+            if (containsAllBasicCourses(basic2CoursesJson, takenCourses)){
+                coursesCount+=5;
+            }
+            
+        } else if (containsAtLeastOneCourse(basic3CoursesJson, takenCourses)) {
+            coursesCount +=4;
+            choice1CoursesLeft = getRemainingCourses(choice3_1CoursesJson, takenCourses);
+            choice2CoursesLeft = getRemainingCourses(choice3_2CoursesJson, takenCourses);
+            
+            choice1CoursesNeeded = countPassed(choice3_1CoursesJson, takenCourses);
+            choice2CoursesNeeded = countPassed(choice3_2CoursesJson, takenCourses);
+            
+            if (choice1CoursesNeeded>=2){
+                coursesCount+=choice1CoursesNeeded;
+                choice1CoursesNeeded = 0;
+            }
+             if (choice2CoursesNeeded>=4){
+                 coursesCount+=choice2CoursesNeeded;
+                 choice2CoursesNeeded = 0;
+            }
+             
+            if (coursesCount<8){
+                ArrayList<JSONArray> array = new ArrayList<>();
+                array.addAll(Arrays.asList(choice1_1CoursesJson, choice2_1CoursesJson, choice1_2CoursesJson, choice2_2CoursesJson));
+                choiceFromOthersBasicAvailable = combineCourseArrays(array);
+                choiceFromOthersBasicPassed = countPassed(array, takenCourses);
+            }
+            
+            if (containsAllBasicCourses(basic3CoursesJson, takenCourses)){
+                coursesCount+=5;
+            }
+            
+        } else {
+            basicCoursesLeft = (countBasicCoursesLeftN2(basic1CoursesJson, basic2CoursesJson, basic3CoursesJson, takenCourses));
+            basicCoursesNeeded = basicCoursesLeft.size();
+            if (basicCoursesNeeded == 15) {
+                basicCoursesNeeded = 5;
+            }
+        }
+        
+        if (totalCourseCount >= 40 && mandatoryCoursesLeft.isEmpty() && basicCoursesNeeded == 0){
+            passedAll = true;
+        }
+        
+        result.setMandatoryCoursesLeft(mandatoryCoursesLeft);
+        result.setMandatoryCoursesNeeded(mandatoryCoursesLeft.size());
+        result.setBasicCoursesLeft(basicCoursesLeft);
+        result.setBasicCoursesNeeded(basicCoursesNeeded);
+        result.setChoice1CoursesLeft(choice1CoursesLeft);
+        result.setChoice1CoursesNeeded(choice1CoursesNeeded);
+        result.setChoice2CoursesLeft(choice2CoursesLeft);
+        result.setChoice2CoursesNeeded(choice2CoursesNeeded);
+        result.setChoiceFromOthersBasicAvailable(choiceFromOthersBasicAvailable);
+        result.setChoiceFromOthersBasicPassed(choiceFromOthersBasicPassed);
+        result.setPassedAll(passedAll);
+        
+        return result;
     }
     
     private static NeededCoursesN1 calculateN1(ArrayList<Course> courses) {
@@ -392,7 +533,7 @@ public class UtilFunctions {
         return true;
     }
 
-    private static ArrayList<Course> countBasicCoursesLeft(JSONArray basic1CoursesJson, JSONArray basic2CoursesJson, JSONArray basic3CoursesJson, Set<String> takenCourses) {
+    private static ArrayList<Course> countBasicCoursesLeftICE1(JSONArray basic1CoursesJson, JSONArray basic2CoursesJson, JSONArray basic3CoursesJson, Set<String> takenCourses) {
         int count1 = countCoursesNotTaken(basic1CoursesJson, takenCourses);
         int count2 = countCoursesNotTaken(basic2CoursesJson, takenCourses);
         int count3 = countCoursesNotTaken(basic3CoursesJson, takenCourses);
@@ -533,6 +674,59 @@ public class UtilFunctions {
         count += Math.min(generalCount, 2);
 
         return count;
+    }
+
+    private static int countPassed(JSONArray courses, Set<String> takenCourses) {
+        int count = 0;
+        for (int i = 0; i < courses.length(); i++) {
+            JSONObject course = courses.getJSONObject(i);
+            String courseId = course.getString("id");
+            if (takenCourses.contains(courseId)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private static int countPassed(ArrayList<JSONArray> array, Set<String> takenCourses) {
+        int count = 0;
+        for (JSONArray courses : array) {
+            for (int i = 0; i < courses.length(); i++) {
+                JSONObject course = courses.getJSONObject(i);
+                String courseId = course.getString("id");
+                if (takenCourses.contains(courseId)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    private static ArrayList<Course> countBasicCoursesLeftN2(JSONArray basic1CoursesJson, JSONArray basic2CoursesJson, JSONArray basic3CoursesJson, Set<String> takenCourses) {
+        int count1 = countCoursesNotTaken(basic1CoursesJson, takenCourses);
+        int count2 = countCoursesNotTaken(basic2CoursesJson, takenCourses);
+        int count3 = countCoursesNotTaken(basic3CoursesJson, takenCourses);
+
+        if (count1 == 5 && count2 == 5 && count3 == 5)
+            return allBasicCourses(basic1CoursesJson, basic2CoursesJson, basic3CoursesJson);
+         else if (count1 <= count2 && count1 <= count3) 
+            return getRemainingCourses(basic1CoursesJson, takenCourses);
+         else if (count2 <= count1 && count2 <= count3) 
+            return getRemainingCourses(basic2CoursesJson, takenCourses);
+         else if (count3 <= count1 && count3 <= count2) 
+            return getRemainingCourses(basic3CoursesJson, takenCourses);
+         else return new ArrayList<>();
+    }
+
+    private static boolean containsAtLeastOneCourse(JSONArray basic1CoursesJson, Set<String> takenCourses) {
+        for (int i = 0; i < basic1CoursesJson.length(); i++) {
+            JSONObject course = basic1CoursesJson.getJSONObject(i);
+            String courseId = course.getString("id");
+            if (takenCourses.contains(courseId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
