@@ -209,9 +209,14 @@ public class UtilFunctions {
                 basicCoursesNeeded = 4;
             }
             choiceCoursesFromSameBasicNeeded = 5;
+            
+            ArrayList<JSONArray> array = new ArrayList<>();
+            array.addAll(Arrays.asList(basic1CoursesJson, basic2CoursesJson, basic3CoursesJson,choice1CoursesJson, choice2CoursesJson, choice3CoursesJson,generalCoursesJson));
+            choiceCoursesFromSameBasicLeft = combineCourseArrays(array);
+            choiceCoursesFromOtherBasicLeft = choiceCoursesFromSameBasicLeft;
         }
 
-        if (totalCourseCount == 55 && mandatoryCoursesLeft.isEmpty() &&  basicCoursesNeeded == 0) {
+        if (totalCourseCount >= 55 && mandatoryCoursesLeft.isEmpty() &&  basicCoursesNeeded == 0) {
             result.setChoiceCoursesNeeded(0);
             passedAll = true;
         } else {
