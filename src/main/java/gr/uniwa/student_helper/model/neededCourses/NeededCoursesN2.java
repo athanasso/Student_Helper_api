@@ -7,8 +7,8 @@ public class NeededCoursesN2 {
     
     private int mandatoryCoursesNeeded;
     private ArrayList<Course> mandatoryCoursesLeft;
-    private int basicCourses1Needed;
-    private ArrayList<Course> basicCourses1Left;
+    private int basicCoursesNeeded;
+    private ArrayList<Course> basicCoursesLeft;
     private int choice1CoursesNeeded;
     private ArrayList<Course> choice1CoursesLeft;
     private int choice2CoursesNeeded;
@@ -20,8 +20,8 @@ public class NeededCoursesN2 {
     public NeededCoursesN2() {
         this.mandatoryCoursesNeeded = 0;
         this.mandatoryCoursesLeft = new ArrayList<>();
-        this.basicCourses1Needed = 0;
-        this.basicCourses1Left = new ArrayList<>();
+        this.basicCoursesNeeded = 0;
+        this.basicCoursesLeft = new ArrayList<>();
         this.choice1CoursesNeeded = 0;        
         this.choice1CoursesLeft = new ArrayList<>();
         this.choice2CoursesNeeded = 0;
@@ -47,20 +47,20 @@ public class NeededCoursesN2 {
         this.mandatoryCoursesLeft = mandatoryCoursesLeft;
     }
 
-    public int getBasicCourses1Needed() {
-        return basicCourses1Needed;
+    public int getBasicCoursesNeeded() {
+        return basicCoursesNeeded;
     }
 
-    public void setBasicCourses1Needed(int basicCourses1Needed) {
-        this.basicCourses1Needed = basicCourses1Needed;
+    public void setBasicCoursesNeeded(int basicCourses1Needed) {
+        this.basicCoursesNeeded = basicCourses1Needed;
     }
 
-    public ArrayList<Course> getBasicCourses1Left() {
-        return basicCourses1Left;
+    public ArrayList<Course> getBasicCoursesLeft() {
+        return basicCoursesLeft;
     }
 
-    public void setBasicCourses1Left(ArrayList<Course> basicCourses1Left) {
-        this.basicCourses1Left = basicCourses1Left;
+    public void setBasicCoursesLeft(ArrayList<Course> basicCourses1Left) {
+        this.basicCoursesLeft = basicCourses1Left;
     }
 
     public int getChoice1CoursesNeeded() {
