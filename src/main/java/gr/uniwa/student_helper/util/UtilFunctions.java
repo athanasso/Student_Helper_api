@@ -8,6 +8,15 @@ import gr.uniwa.student_helper.model.neededCourses.NeededCoursesPeir;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -17,6 +26,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.Arrays;
+import java.util.Date;
 import org.json.JSONException;
 
 public class UtilFunctions {
@@ -732,6 +742,53 @@ public class UtilFunctions {
             }
         }
         return false;
+    }
+    
+    public static String convertTimestampToString(String timestampString) {
+        if (timestampString=="null") return "";
+        
+        // Convert timestamp to LocalDateTime
+        Instant instant = Instant.ofEpochMilli(Long.parseLong(timestampString));
+        LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+
+        // Format LocalDateTime to desired date format
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String formattedDate = dateTime.format(formatter);
+
+        return formattedDate;
+    }
+    
+    public static String calculateLastExaminationDate(String dateString) {
+
+        long timestamp = Long.parseLong(dateString);
+        // Parse the date string
+        LocalDate assignmentDate = LocalDate.ofEpochDay(timestamp / (24 * 60 * 60 * 1000));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
+
+        int year = assignmentDate.getYear();
+        Month month = assignmentDate.getMonth();
+
+        // Determine the last examination month based on the assignment month
+        Month lastExaminationMonth;
+        if (month.getValue() >= Month.MARCH.getValue() && month.getValue()< Month.SEPTEMBER.getValue()) {
+            lastExaminationMonth = Month.JUNE;
+        } else if (month.getValue() == Month.SEPTEMBER.getValue()){
+            lastExaminationMonth = Month.SEPTEMBER;
+        }
+        else {
+            lastExaminationMonth = Month.FEBRUARY;
+        }
+        
+        year++;
+
+        // Construct the last examination date using the determined month and year
+        LocalDate lastExaminationDate = LocalDate.of(year, lastExaminationMonth, 1);
+
+        // Format the last examination date as a string
+        String lastExaminationDateString = lastExaminationDate.format(formatter);
+
+        return lastExaminationDateString;
     }
 
 }

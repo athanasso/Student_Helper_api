@@ -36,6 +36,7 @@ public class ScrapeService {
 
             String infoJSON = scraper.getInfoJSON();
             String gradesJSON = scraper.getGradesJSON();
+            String thesisJson = scraper.getThesisJSON();
             String totalAverageGrade = scraper.getTotalAverageGrade();
 
             // check for internal errors
@@ -45,7 +46,7 @@ public class ScrapeService {
             }
 
             Parser parser = new Parser(university, system);
-            Student student = parser.parseInfoAndGradesJSON(infoJSON, gradesJSON, totalAverageGrade);
+            Student student = parser.parseInfoAndGradesJSON(infoJSON, gradesJSON, thesisJson, totalAverageGrade);
 
             if (student == null) {
                 logger.warn("Internal Server Error");

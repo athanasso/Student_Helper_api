@@ -6,6 +6,7 @@ import gr.uniwa.student_helper.model.Grades;
 import gr.uniwa.student_helper.model.Student;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gr.uniwa.student_helper.model.Thesis;
 import gr.uniwa.student_helper.util.UtilFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,20 +134,67 @@ public class Parser {
         }
     }
 
-    public Student parseInfoAndGradesJSON(String infoJSON, String gradesJSON, String totalAverageGrade) {
+    private Thesis parseThesissJSON(String thesisJSON) {
+        Thesis thesis = new Thesis();
+        try {
+            JsonNode node = new ObjectMapper().readTree(thesisJSON);
+
+            for (JsonNode jsonNode : node) {
+                // Extract the desired values
+                JsonNode thesisDTO = jsonNode.get("thesisDTO");
+                JsonNode title = thesisDTO.get("title");
+                JsonNode code = thesisDTO.get("code");
+                JsonNode assignmentDate = thesisDTO.get("dateStart");
+                JsonNode completionDate = thesisDTO.get("dateEnd");
+                JsonNode examDate = thesisDTO.get("dateExam");
+                JsonNode status = thesisDTO.get("thesisStatusTitle");
+
+                thesis.setTitle(title.asText());
+                thesis.setCode(code.asText());
+                thesis.setAssignmentDate(UtilFunctions.convertTimestampToString(assignmentDate.asText()));
+                thesis.setCompletionDate(UtilFunctions.convertTimestampToString(completionDate.asText()));
+                thesis.setExamDate(UtilFunctions.convertTimestampToString(examDate.asText()));
+                thesis.setStatus(status.asText());
+                
+                thesis.setLastDueDate(UtilFunctions.calculateLastExaminationDate(assignmentDate.asText()));
+                 logger.info("1: "+UtilFunctions.calculateLastExaminationDate("1672531200000"));
+                  logger.info("2: "+UtilFunctions.calculateLastExaminationDate("1675209600000"));
+                   logger.info("3: "+UtilFunctions.calculateLastExaminationDate("1677628800000"));
+                    logger.info("4: "+UtilFunctions.calculateLastExaminationDate("1680307200000"));
+                     logger.info("5: "+UtilFunctions.calculateLastExaminationDate("1682899200000"));
+                      logger.info("6: "+UtilFunctions.calculateLastExaminationDate("1685577600000"));
+                       logger.info("7: "+UtilFunctions.calculateLastExaminationDate("1688169600000"));
+                        logger.info("8: "+UtilFunctions.calculateLastExaminationDate("1690848000000"));
+                         logger.info("9: "+UtilFunctions.calculateLastExaminationDate("1693526400000"));
+                          logger.info("10: "+UtilFunctions.calculateLastExaminationDate("1696118400000"));
+                           logger.info("11: "+UtilFunctions.calculateLastExaminationDate("1698796800000"));
+                            logger.info("12: "+UtilFunctions.calculateLastExaminationDate("1701388800000"));
+            }
+            return thesis;
+        } catch (IOException e) {
+            logger.error("[" + PRE_LOG + "] Error: {}", e.getMessage(), e);
+            setException(e);
+            setDocument(thesisJSON);
+            return null;
+        }
+    }
+
+    public Student parseInfoAndGradesJSON(String infoJSON, String gradesJSON, String thesisJSON, String totalAverageGrade) {
         Student student = new Student();
 
         try {
             Info info = parseInfoJSON(infoJSON);
             Grades grades = parseGradesJSON(gradesJSON, totalAverageGrade);
+            Thesis thesis = parseThesissJSON(thesisJSON);
 
             if (info == null || grades == null) {
                 return null;
             }
-
+            
+            info.setThesis(thesis);
             student.setInfo(info);
             student.setGrades(grades);
-
+            
             return student;
         } catch (Exception e) {
             logger.error("[" + PRE_LOG + "] Error: {}", e.getMessage(), e);

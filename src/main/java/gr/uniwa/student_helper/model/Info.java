@@ -10,19 +10,9 @@ public class Info {
     private String registrationYear;
     private String curriculum;
     private String deletionYear;
+    private Thesis thesis;
 
     public Info() {
-    }
-
-    public Info(String am, String firstName, String lastName, String department, String semester, String registrationYear, String curriculum, String deletionYear) {
-        this.am = am;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.department = department;
-        this.currentSemester = semester;
-        this.registrationYear = registrationYear;
-        this.curriculum = curriculum;
-        this.deletionYear = deletionYear;
     }
 
     public String getAm() {
@@ -87,5 +77,13 @@ public class Info {
 
     public void setDeletionYear(String deletionYear) {
         this.deletionYear = deletionYear;
+    }
+
+    public Thesis getThesis() {
+        return thesis;
+    }
+
+    public void setThesis(Thesis thesis) {
+        this.thesis = thesis;
     }
 }

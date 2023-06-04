@@ -28,6 +28,7 @@ public class Scraper {
     private boolean authorized;
     private String infoJSON;
     private String gradesJSON;
+    private String thesisJSON;
     private String totalAverageGrade;
     private Map<String, String> cookies;
     private final Logger logger = LoggerFactory.getLogger(Scraper.class);
@@ -157,6 +158,9 @@ public class Scraper {
 
         gradesJSON = httpGET("https://" + DOMAIN + "/feign/student/grades/diploma", cookie.toString(), _csrf, xProfile);
         if (gradesJSON == null) return;
+        
+        thesisJSON = httpGET("https://" + DOMAIN + "/feign/student/thesis", cookie.toString(), _csrf, xProfile);
+        if (thesisJSON == null) return;
 
         totalAverageGrade = httpGET("https://" + DOMAIN + "/feign/student/grades/average_student_course_grades", cookie.toString(), _csrf, xProfile);
         setCookies(cookie.toString(), _csrf, xProfile);
@@ -175,6 +179,9 @@ public class Scraper {
 
         gradesJSON = httpGET("https://" + DOMAIN + "/feign/student/grades/diploma", cookie, _csrf, xProfile);
         if (gradesJSON == null) return;
+        
+        thesisJSON = httpGET("https://" + DOMAIN + "/feign/student/thesis", cookie, _csrf, xProfile);
+        if (thesisJSON == null) return;
 
         totalAverageGrade = httpGET("https://" + DOMAIN + "/feign/student/grades/average_student_course_grades", cookie, _csrf, xProfile);
         setCookies(cookie, _csrf, xProfile);
@@ -321,6 +328,10 @@ public class Scraper {
 
     public String getGradesJSON() {
         return gradesJSON;
+    }
+
+    public String getThesisJSON() {
+        return thesisJSON;
     }
 
     public String getTotalAverageGrade() {
