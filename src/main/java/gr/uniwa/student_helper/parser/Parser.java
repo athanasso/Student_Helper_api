@@ -50,7 +50,6 @@ public class Parser {
 
             String curriculum = student.get("programTitle").asText();
             info.setCurriculum(curriculum);
-            this.setCurriculum(curriculum);
             
             switch (curriculum) {
                 case "ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)" -> {
