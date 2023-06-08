@@ -35,12 +35,12 @@ public class Thesis {
         this.code = code;
     }
 
-    public String getΑssignmentDate() {
+    public String getAssignmentDate() {
         return assignmentDate;
     }
 
-    public void setAssignmentDate(String dateTaken) {
-        this.assignmentDate = dateTaken;
+    public void setAssignmentDate(String assignmentDate) {
+        this.assignmentDate = assignmentDate;
     }
 
     public String getCompletionDate() {

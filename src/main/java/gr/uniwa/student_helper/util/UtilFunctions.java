@@ -745,7 +745,7 @@ public class UtilFunctions {
     }
     
     public static String convertTimestampToString(String timestampString) {
-        if (timestampString=="null") return "";
+        if (timestampString=="null") return "N/A";
         
         // Convert timestamp to LocalDateTime
         Instant instant = Instant.ofEpochMilli(Long.parseLong(timestampString));

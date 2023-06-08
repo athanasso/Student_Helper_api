@@ -157,18 +157,18 @@ public class Parser {
                 thesis.setStatus(status.asText());
                 
                 thesis.setLastDueDate(UtilFunctions.calculateLastExaminationDate(assignmentDate.asText()));
-                 logger.info("1: "+UtilFunctions.calculateLastExaminationDate("1672531200000"));
-                  logger.info("2: "+UtilFunctions.calculateLastExaminationDate("1675209600000"));
-                   logger.info("3: "+UtilFunctions.calculateLastExaminationDate("1677628800000"));
-                    logger.info("4: "+UtilFunctions.calculateLastExaminationDate("1680307200000"));
-                     logger.info("5: "+UtilFunctions.calculateLastExaminationDate("1682899200000"));
-                      logger.info("6: "+UtilFunctions.calculateLastExaminationDate("1685577600000"));
-                       logger.info("7: "+UtilFunctions.calculateLastExaminationDate("1688169600000"));
-                        logger.info("8: "+UtilFunctions.calculateLastExaminationDate("1690848000000"));
-                         logger.info("9: "+UtilFunctions.calculateLastExaminationDate("1693526400000"));
-                          logger.info("10: "+UtilFunctions.calculateLastExaminationDate("1696118400000"));
-                           logger.info("11: "+UtilFunctions.calculateLastExaminationDate("1698796800000"));
-                            logger.info("12: "+UtilFunctions.calculateLastExaminationDate("1701388800000"));
+//                 logger.info("1: "+UtilFunctions.calculateLastExaminationDate("1672531200000"));
+//                  logger.info("2: "+UtilFunctions.calculateLastExaminationDate("1675209600000"));
+//                   logger.info("3: "+UtilFunctions.calculateLastExaminationDate("1677628800000"));
+//                    logger.info("4: "+UtilFunctions.calculateLastExaminationDate("1680307200000"));
+//                     logger.info("5: "+UtilFunctions.calculateLastExaminationDate("1682899200000"));
+//                      logger.info("6: "+UtilFunctions.calculateLastExaminationDate("1685577600000"));
+//                       logger.info("7: "+UtilFunctions.calculateLastExaminationDate("1688169600000"));
+//                        logger.info("8: "+UtilFunctions.calculateLastExaminationDate("1690848000000"));
+//                         logger.info("9: "+UtilFunctions.calculateLastExaminationDate("1693526400000"));
+//                          logger.info("10: "+UtilFunctions.calculateLastExaminationDate("1696118400000"));
+//                           logger.info("11: "+UtilFunctions.calculateLastExaminationDate("1698796800000"));
+//                            logger.info("12: "+UtilFunctions.calculateLastExaminationDate("1701388800000"));
             }
             return thesis;
         } catch (IOException e) {
