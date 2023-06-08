@@ -52,12 +52,33 @@ public class Parser {
             info.setCurriculum(curriculum);
             this.setCurriculum(curriculum);
             
+            switch (curriculum) {
+                case "ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)" -> {
+                    info.setCurriculumCode("ICE1");
+                    this.setCurriculum("ICE1");
+                }
+                case "Υπό Εφαρμογή - Νέο Πρόγραμμα Σπουδών (από 20/9/2014)" -> {
+                    info.setCurriculumCode("N2");
+                    this.setCurriculum("N2");
+                }
+                case "Νέο Πρόγραμμα Σπουδών (από 20/9/2010)" -> {
+                    info.setCurriculumCode("N1");
+                    this.setCurriculum("N1");
+                }
+                case "2017 - ΝΕΟ [24]" -> {
+                    info.setCurriculumCode("Peir");
+                    this.setCurriculum("Peir");
+                }
+                default ->
+                    logger.error("Error: couldn't set CurriculumCode");
+            }
+
             boolean isPartTime = student.get("isPartTime").asBoolean();
 
             int currentSemester = student.get("lastSemester").asInt();
             info.setCurrentSemester((currentSemester == 0) ? "1" : String.valueOf(currentSemester));
 
-            int deletionYear = UtilFunctions.calculateYearOfDeletion(curriculum, Integer.parseInt(registrationYear), isPartTime);
+            int deletionYear = UtilFunctions.calculateYearOfDeletion(this.getCurriculum(), Integer.parseInt(registrationYear), isPartTime);
             info.setDeletionYear(Integer.toString(deletionYear - 1) + "-" + Integer.toString(deletionYear));
 
             return info;

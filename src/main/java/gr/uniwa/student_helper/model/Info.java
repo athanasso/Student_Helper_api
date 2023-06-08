@@ -9,6 +9,7 @@ public class Info {
     private String currentSemester;
     private String registrationYear;
     private String curriculum;
+    private String curriculumCode;
     private String deletionYear;
     private Thesis thesis;
 
@@ -69,6 +70,14 @@ public class Info {
 
     public void setCurriculum(String curriculum) {
         this.curriculum = curriculum;
+    }
+
+    public String getCurriculumCode() {
+        return curriculumCode;
+    }
+
+    public void setCurriculumCode(String curriculumCode) {
+        this.curriculumCode = curriculumCode;
     }
 
     public String getDeletionYear() {

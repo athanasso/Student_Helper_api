@@ -8,15 +8,12 @@ import gr.uniwa.student_helper.model.neededCourses.NeededCoursesPeir;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,7 +23,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.Arrays;
-import java.util.Date;
 import org.json.JSONException;
 
 public class UtilFunctions {
@@ -44,7 +40,7 @@ public class UtilFunctions {
      */
     public static int calculateYearOfDeletion(String curriculum, int registrationYear, boolean partTime) {
         if (!partTime) {
-            if (curriculum.equals("ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)")){
+            if (curriculum.equals("ICE1")){
                 if (registrationYear<2015) return 2026;
                 if (registrationYear<2021) return 2029;
                 if (registrationYear>=2022) return registrationYear+8;
@@ -69,16 +65,16 @@ public class UtilFunctions {
     public static ArrayList<Course> calculateCourses(ArrayList<Course> courses, String curriculum) {
 
         switch (curriculum) {
-            case "ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)" -> {
+            case "ICE1" -> {
                 return filterCourses(courses, "ICE1");
             }
-            case "Υπό Εφαρμογή - Νέο Πρόγραμμα Σπουδών (από 20/9/2014)" -> {
+            case "N2" -> {
                 return filterCourses(courses, "N2");
             }
-            case "Νέο Πρόγραμμα Σπουδών (από 20/9/2010)" -> {
+            case "N1" -> {
                 return filterCourses(courses, "N1");
             }
-            case "2017 - ΝΕΟ [24]" -> {
+            case "Peir" -> {
                 ArrayList<Course> filteredCourses = new ArrayList<>();
                 for (Course course : courses) {
                     if (course.getId().length() >= 6 && course.getId().length() <= 8) {
@@ -106,20 +102,20 @@ public class UtilFunctions {
 
     public static Object calculateNeededCourses(ArrayList<Course> courses, String curriculum) {
         switch (curriculum) {
-            case "ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)" -> {
+            case "ICE1" -> {
                 return calculateICE1(courses);
             }
-            case "Υπό Εφαρμογή - Νέο Πρόγραμμα Σπουδών (από 20/9/2014)" -> {
+            case "N2" -> {
                 return calculateN2(courses);
             }
-            case "Νέο Πρόγραμμα Σπουδών (από 20/9/2010)" -> {
+            case "N1" -> {
                 return calculateN1(courses);
             }
-            case "2017 - ΝΕΟ [24]" -> {
+            case "Peir" -> {
                 return calculatePeir(courses);
             }
             default ->
-                logger.error("Error: couldn't calculate courses");
+                logger.error("Error: couldn't calculate needed courses");
         }
         return null;
     }
