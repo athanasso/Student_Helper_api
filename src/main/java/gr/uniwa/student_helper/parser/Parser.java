@@ -50,27 +50,9 @@ public class Parser {
 
             String curriculum = student.get("programTitle").asText();
             info.setCurriculum(curriculum);
+            this.setCurriculum(curriculum);
             
-            switch (curriculum) {
-                case "ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)" -> {
-                    info.setCurriculumCode("ICE1");
-                    this.setCurriculum("ICE1");
-                }
-                case "Υπό Εφαρμογή - Νέο Πρόγραμμα Σπουδών (από 20/9/2014)" -> {
-                    info.setCurriculumCode("N2");
-                    this.setCurriculum("N2");
-                }
-                case "Νέο Πρόγραμμα Σπουδών (από 20/9/2010)" -> {
-                    info.setCurriculumCode("N1");
-                    this.setCurriculum("N1");
-                }
-                case "2017 - ΝΕΟ [24]" -> {
-                    info.setCurriculumCode("Peir");
-                    this.setCurriculum("Peir");
-                }
-                default ->
-                    logger.error("Error: couldn't set CurriculumCode");
-            }
+            info.setCurriculumCode(UtilFunctions.calculateCurriculumIdentifier(curriculum));
 
             boolean isPartTime = student.get("isPartTime").asBoolean();
 

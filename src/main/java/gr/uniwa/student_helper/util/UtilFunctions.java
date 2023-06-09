@@ -40,7 +40,7 @@ public class UtilFunctions {
      */
     public static int calculateYearOfDeletion(String curriculum, int registrationYear, boolean partTime) {
         if (!partTime) {
-            if (curriculum.equals("ICE1")){
+            if (curriculum.equals("ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)")){
                 if (registrationYear<2015) return 2026;
                 if (registrationYear<2021) return 2029;
                 if (registrationYear>=2022) return registrationYear+8;
@@ -63,18 +63,17 @@ public class UtilFunctions {
      *
      */
     public static ArrayList<Course> calculateCourses(ArrayList<Course> courses, String curriculum) {
-
         switch (curriculum) {
-            case "ICE1" -> {
+            case "ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)" -> {
                 return filterCourses(courses, "ICE1");
             }
-            case "N2" -> {
+            case "Υπό Εφαρμογή - Νέο Πρόγραμμα Σπουδών (από 20/9/2014)" -> {
                 return filterCourses(courses, "N2");
             }
-            case "N1" -> {
+            case "Νέο Πρόγραμμα Σπουδών (από 20/9/2010)" -> {
                 return filterCourses(courses, "N1");
             }
-            case "Peir" -> {
+            case "2017 - ΝΕΟ [24]" -> {
                 ArrayList<Course> filteredCourses = new ArrayList<>();
                 for (Course course : courses) {
                     if (course.getId().length() >= 6 && course.getId().length() <= 8) {
@@ -102,16 +101,16 @@ public class UtilFunctions {
 
     public static Object calculateNeededCourses(ArrayList<Course> courses, String curriculum) {
         switch (curriculum) {
-            case "ICE1" -> {
+            case "ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)" -> {
                 return calculateICE1(courses);
             }
-            case "N2" -> {
+            case "Υπό Εφαρμογή - Νέο Πρόγραμμα Σπουδών (από 20/9/2014)" -> {
                 return calculateN2(courses);
             }
-            case "N1" -> {
+            case "Νέο Πρόγραμμα Σπουδών (από 20/9/2010)" -> {
                 return calculateN1(courses);
             }
-            case "Peir" -> {
+            case "2017 - ΝΕΟ [24]" -> {
                 return calculatePeir(courses);
             }
             default ->
@@ -787,4 +786,24 @@ public class UtilFunctions {
         return lastExaminationDateString;
     }
 
+    public static String calculateCurriculumIdentifier(String curriculum) {
+        switch (curriculum) {
+            case "ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)" -> {
+                return "ICE1";
+            }
+            case "Υπό Εφαρμογή - Νέο Πρόγραμμα Σπουδών (από 20/9/2014)" -> {
+                return "N2";
+            }
+            case "Νέο Πρόγραμμα Σπουδών (από 20/9/2010)" -> {
+                return "N1";
+            }
+            case "2017 - ΝΕΟ [24]" -> {
+                return "Peir";
+            }
+            default -> {
+                logger.error("Error: couldn't set CurriculumCode");
+                return "";
+            }
+        }
+    }
 }
