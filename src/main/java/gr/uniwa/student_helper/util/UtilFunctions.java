@@ -752,39 +752,7 @@ public class UtilFunctions {
 
         return formattedDate;
     }
-    
-    public static String calculateLastExaminationDate(String dateString) {
 
-        long timestamp = Long.parseLong(dateString);
-        // Parse the date string
-        LocalDate assignmentDate = LocalDate.ofEpochDay(timestamp / (24 * 60 * 60 * 1000));
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
-
-        int year = assignmentDate.getYear();
-        Month month = assignmentDate.getMonth();
-
-        // Determine the last examination month based on the assignment month
-        Month lastExaminationMonth;
-        if (month.getValue() >= Month.MARCH.getValue() && month.getValue()< Month.SEPTEMBER.getValue()) {
-            lastExaminationMonth = Month.JUNE;
-        } else if (month.getValue() == Month.SEPTEMBER.getValue()){
-            lastExaminationMonth = Month.SEPTEMBER;
-        }
-        else {
-            lastExaminationMonth = Month.FEBRUARY;
-        }
-        
-        year++;
-
-        // Construct the last examination date using the determined month and year
-        LocalDate lastExaminationDate = LocalDate.of(year, lastExaminationMonth, 1);
-
-        // Format the last examination date as a string
-        String lastExaminationDateString = lastExaminationDate.format(formatter);
-
-        return lastExaminationDateString;
-    }
 
     public static String calculateCurriculumIdentifier(String curriculum) {
         switch (curriculum) {

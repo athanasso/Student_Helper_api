@@ -7,8 +7,7 @@ public class Thesis {
     private String completionDate;
     private String examDate;
     private String status;
-    private String lastDueDate;
-
+    
     public Thesis() {
         this.title = "";
         this.code = "";
@@ -16,7 +15,6 @@ public class Thesis {
         this.completionDate = "";
         this.examDate = "";
         this.status = "";
-        this.lastDueDate = "";
     }
 
     public String getTitle() {
@@ -65,14 +63,6 @@ public class Thesis {
 
     public void setStatus(String state) {
         this.status = state;
-    }
-
-    public String getLastDueDate() {
-        return lastDueDate;
-    }
-
-    public void setLastDueDate(String lastDueDate) {
-        this.lastDueDate = lastDueDate;
     }
     
 }
