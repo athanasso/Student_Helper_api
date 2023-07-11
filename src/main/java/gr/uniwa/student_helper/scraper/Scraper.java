@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
+import org.jsoup.nodes.Element;
 
 public class Scraper {
     private final String UNIVERSITY;
@@ -67,7 +68,7 @@ public class Scraper {
         Map<String, String> data = new HashMap<>();
         String lt = null;
         String execution;
-        String _csrf;
+        String _csrf = null;
 
         try {
             response = getResponse();
@@ -130,7 +131,12 @@ public class Scraper {
             }
 
             Elements el = pageIncludesToken.getElementsByAttributeValue("name", "_csrf");
-            _csrf = el.first().attributes().get("content");
+            if (!el.isEmpty()) {
+                Element csrfElement = el.first();
+                if (csrfElement != null) {
+                    _csrf = csrfElement.attributes().get("content");
+                }
+            }
         } catch (SocketTimeoutException | UnknownHostException | HttpStatusException | ConnectException connException) {
             connected = false;
             logger.warn("[" + PRE_LOG + "] Warning: {}", connException.getMessage(), connException);
