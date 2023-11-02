@@ -158,7 +158,7 @@ public class UtilFunctions {
         int basic2CoursesCount = basic2CoursesJson.length();
         int basic3CoursesCount = basic3CoursesJson.length();
 
-        if (containsAllBasicCourses(basic1CoursesJson, takenCourses) || basic1CoursesCount >= basic2CoursesCount && basic1CoursesCount >= basic3CoursesCount) {
+        if (basic1CoursesCount >= basic2CoursesCount && basic1CoursesCount >= basic3CoursesCount) {
             choiceCoursesFromSameBasicLeft = getRemainingCourses(choice1CoursesJson, takenCourses);
             if (choiceCoursesFromSameBasicLeft.size() < 5) {
                 choiceCoursesFromSameBasicNeeded = 5 - choiceCoursesFromSameBasicLeft.size();
@@ -175,7 +175,7 @@ public class UtilFunctions {
             if (choiceCoursesFromOtherBasicAvailable < 0) {
                 choiceCoursesFromOtherBasicAvailable = 0;
             }
-        } else if (containsAllBasicCourses(basic2CoursesJson, takenCourses) || basic2CoursesCount >= basic1CoursesCount && basic2CoursesCount >= basic3CoursesCount) {
+        } else if (basic2CoursesCount >= basic1CoursesCount && basic2CoursesCount >= basic3CoursesCount) {
             choiceCoursesFromSameBasicLeft = getRemainingCourses(choice2CoursesJson, takenCourses);
             if (choiceCoursesFromSameBasicLeft.size() < 5) {
                 choiceCoursesFromSameBasicNeeded = 5 - choiceCoursesFromSameBasicLeft.size();
@@ -192,7 +192,7 @@ public class UtilFunctions {
             if (choiceCoursesFromOtherBasicAvailable < 0) {
                 choiceCoursesFromOtherBasicAvailable = 0;
             }
-        } else if ((containsAllBasicCourses(basic3CoursesJson, takenCourses)) || basic3CoursesCount >= basic1CoursesCount && basic3CoursesCount >= basic2CoursesCount) {
+        } else if (basic3CoursesCount >= basic1CoursesCount && basic3CoursesCount >= basic2CoursesCount) {
             choiceCoursesFromSameBasicLeft = getRemainingCourses(choice3CoursesJson, takenCourses);
             if (choiceCoursesFromSameBasicLeft.size() < 5) {
                 choiceCoursesFromSameBasicNeeded = 5 - choiceCoursesFromSameBasicLeft.size();
@@ -612,18 +612,6 @@ public class UtilFunctions {
         }
     }
 
-    private static int countCoursesInTakenCourses(ArrayList<Course> coursesList, Set<String> takenCourses) {
-        int count = 0;
-
-        for (Course course : coursesList) {
-            if (takenCourses.contains(course.getId())) {
-                count++;
-            }
-        }
-
-        return count;
-    }
-    
     private static int countCoursesInOthersTakenCourses(ArrayList<Course> coursesList, Set<String> takenCourses) {
         int count = 7;
 
