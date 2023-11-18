@@ -121,11 +121,31 @@ public class UtilFunctions {
         NeededCoursesICE1 result = new NeededCoursesICE1();
         ArrayList<Course> mandatoryCoursesLeft = new ArrayList<>();
         ArrayList<Course> basicCoursesLeft = new ArrayList<>();
-        int basicCoursesNeeded = 0;
-        int choiceCoursesFromSameBasicNeeded = 0;
-        ArrayList<Course> choiceCoursesFromSameBasicLeft = new ArrayList<>();
-        int choiceCoursesFromOtherBasicAvailable = 7;
-        ArrayList<Course> choiceCoursesFromOtherBasicLeft = new ArrayList<>();
+        
+        int basicCoursesNeededForSoftware = 0;
+        ArrayList<Course> basicCoursesLeftForSoftware = new ArrayList<>();
+        int choiceCoursesFromSameBasicNeededForSoftware = 5;
+        ArrayList<Course> choiceCoursesFromSameBasicLeftForSoftware = new ArrayList<>();
+        int choiceCoursesFromOtherBasicAvailableForSoftware = 7;
+        ArrayList<Course> choiceCoursesFromOtherBasicLeftForSoftware = new ArrayList<>();
+        int choiceCoursesFromSameBasicPassedForSoftware = 0;
+        
+        int basicCoursesNeededForHardware = 0;
+        ArrayList<Course> basicCoursesLeftForHardware = new ArrayList<>();
+        int choiceCoursesFromSameBasicNeededForHardware = 5;
+        ArrayList<Course> choiceCoursesFromSameBasicLeftForHardware = new ArrayList<>();
+        int choiceCoursesFromOtherBasicAvailableForHardware = 7;
+        ArrayList<Course> choiceCoursesFromOtherBasicLeftForHardware = new ArrayList<>();
+        int choiceCoursesFromSameBasicPassedForHardware = 0;
+        
+        int basicCoursesNeededForNetwork = 0;
+        ArrayList<Course> basicCoursesLeftForNetwork = new ArrayList<>();
+        int choiceCoursesFromSameBasicNeededForNetwork = 5;
+        ArrayList<Course> choiceCoursesFromSameBasicLeftForNetwork = new ArrayList<>();
+        int choiceCoursesFromOtherBasicAvailableForNetwork = 7;
+        ArrayList<Course> choiceCoursesFromOtherBasicLeftForNetwork = new ArrayList<>();
+        int choiceCoursesFromSameBasicPassedForNetwork = 0;
+        
         int generalCoursesPassed = 0;
         ArrayList<Course> generalCoursesLeft = new ArrayList<>();
         boolean passedAll = false;
@@ -153,93 +173,123 @@ public class UtilFunctions {
 
         generalCoursesLeft = getRemainingCourses(generalCoursesJson, takenCourses);
         generalCoursesPassed = countCoursesInTakenCourses(generalCoursesJson, takenCourses);
-        
-        int basic1CoursesCount = basic1CoursesJson.length();
-        int basic2CoursesCount = basic2CoursesJson.length();
-        int basic3CoursesCount = basic3CoursesJson.length();
 
-        if (basic1CoursesCount >= basic2CoursesCount && basic1CoursesCount >= basic3CoursesCount) {
-            choiceCoursesFromSameBasicLeft = getRemainingCourses(choice1CoursesJson, takenCourses);
-            if (choiceCoursesFromSameBasicLeft.size() < 5) {
-                choiceCoursesFromSameBasicNeeded = 5 - choiceCoursesFromSameBasicLeft.size();
-            }
-            ArrayList<JSONArray> array = new ArrayList<>();
-            if (generalCoursesPassed<2){
-                array.addAll(Arrays.asList(basic2CoursesJson, basic3CoursesJson, choice2CoursesJson, choice3CoursesJson, generalCoursesJson));
-            } else {
-                array.addAll(Arrays.asList(basic2CoursesJson, basic3CoursesJson, choice2CoursesJson, choice3CoursesJson));
-            }
+        // Software Courses
+        ArrayList<JSONArray> array = new ArrayList<>();
 
-            choiceCoursesFromOtherBasicLeft = combineCourseArrays(array);
-            choiceCoursesFromOtherBasicAvailable = countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses) - generalCoursesPassed;
-            if (choiceCoursesFromOtherBasicAvailable < 0) {
-                choiceCoursesFromOtherBasicAvailable = 0;
-            }
-        } else if (basic2CoursesCount >= basic1CoursesCount && basic2CoursesCount >= basic3CoursesCount) {
-            choiceCoursesFromSameBasicLeft = getRemainingCourses(choice2CoursesJson, takenCourses);
-            if (choiceCoursesFromSameBasicLeft.size() < 5) {
-                choiceCoursesFromSameBasicNeeded = 5 - choiceCoursesFromSameBasicLeft.size();
-            }
-            ArrayList<JSONArray> array = new ArrayList<>();
-            if (generalCoursesPassed<2){
-                array.addAll(Arrays.asList(basic1CoursesJson, basic3CoursesJson, choice1CoursesJson, choice3CoursesJson, generalCoursesJson));
-            } else {
-                array.addAll(Arrays.asList(basic1CoursesJson, basic3CoursesJson, choice1CoursesJson, choice3CoursesJson));
-            }
-
-            choiceCoursesFromOtherBasicLeft = combineCourseArrays(array);
-            choiceCoursesFromOtherBasicAvailable = countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses) - generalCoursesPassed;
-            if (choiceCoursesFromOtherBasicAvailable < 0) {
-                choiceCoursesFromOtherBasicAvailable = 0;
-            }
-        } else if (basic3CoursesCount >= basic1CoursesCount && basic3CoursesCount >= basic2CoursesCount) {
-            choiceCoursesFromSameBasicLeft = getRemainingCourses(choice3CoursesJson, takenCourses);
-            if (choiceCoursesFromSameBasicLeft.size() < 5) {
-                choiceCoursesFromSameBasicNeeded = 5 - choiceCoursesFromSameBasicLeft.size();
-            }
-            ArrayList<JSONArray> array = new ArrayList<>();
-            if (generalCoursesPassed<2) {
-                array.addAll(Arrays.asList(basic1CoursesJson, basic2CoursesJson, choice1CoursesJson, choice2CoursesJson, generalCoursesJson));
-            } else {
-                array.addAll(Arrays.asList(basic1CoursesJson, basic2CoursesJson, choice1CoursesJson, choice2CoursesJson));
-            }
-
-            choiceCoursesFromOtherBasicLeft = combineCourseArrays(array);
-            choiceCoursesFromOtherBasicAvailable = countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeft, takenCourses) - generalCoursesPassed;
-            if (choiceCoursesFromOtherBasicAvailable < 0) {
-                choiceCoursesFromOtherBasicAvailable = 0;
-            }
-        } else {
-            basicCoursesLeft = (countBasicCoursesLeftICE1(basic1CoursesJson, basic2CoursesJson, basic3CoursesJson, takenCourses));
-            basicCoursesNeeded = basicCoursesLeft.size();
-            if (basicCoursesNeeded == 12) {
-                basicCoursesNeeded = 4;
-            }
-            choiceCoursesFromSameBasicNeeded = 5;
-
-            ArrayList<JSONArray> array = new ArrayList<>();
-            array.addAll(Arrays.asList(basic1CoursesJson, basic2CoursesJson, basic3CoursesJson,choice1CoursesJson, choice2CoursesJson, choice3CoursesJson,generalCoursesJson));
-            choiceCoursesFromSameBasicLeft = combineCourseArrays(array);
-            choiceCoursesFromOtherBasicLeft = choiceCoursesFromSameBasicLeft;
+        basicCoursesNeededForSoftware = countCoursesNotTaken(basic1CoursesJson, takenCourses);
+        basicCoursesLeftForSoftware = getRemainingCourses(basic1CoursesJson, takenCourses);
+        choiceCoursesFromSameBasicLeftForSoftware = getRemainingCourses(choice1CoursesJson, takenCourses);
+        choiceCoursesFromSameBasicNeededForSoftware -= countCoursesTaken(choice1CoursesJson, takenCourses);
+        if (choiceCoursesFromSameBasicNeededForSoftware < 0) {
+            choiceCoursesFromSameBasicNeededForSoftware = 0;
         }
         
-        if (totalCourseCount >= 55 && mandatoryCoursesLeft.isEmpty() &&  basicCoursesNeeded == 0) {
-            result.setChoiceCoursesNeeded(0);
-            passedAll = true;
+        choiceCoursesFromSameBasicPassedForSoftware = countCoursesTaken(choice1CoursesJson, takenCourses);
+        
+        if (generalCoursesPassed<2){
+            array.addAll(Arrays.asList(basic2CoursesJson, basic3CoursesJson, choice2CoursesJson, choice3CoursesJson, generalCoursesJson));
         } else {
-            ArrayList<JSONArray> array = new ArrayList<>();
-            array.addAll(Arrays.asList(basic1CoursesJson, basic2CoursesJson, basic3CoursesJson, choice1CoursesJson, choice2CoursesJson, choice3CoursesJson, generalCoursesJson));
-            result.setChoiceCoursesNeeded(16 - countCoursesInTakenCoursesFromJsonArrays(array, takenCourses));
+            array.addAll(Arrays.asList(basic2CoursesJson, basic3CoursesJson, choice2CoursesJson, choice3CoursesJson));
+        }
+
+        choiceCoursesFromOtherBasicLeftForSoftware = combineCourseArrays(array);
+        choiceCoursesFromOtherBasicAvailableForSoftware = countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeftForSoftware, takenCourses) - generalCoursesPassed;
+        if (choiceCoursesFromOtherBasicAvailableForSoftware < 0) {
+            choiceCoursesFromOtherBasicAvailableForSoftware = 0;
+        }
+
+        // Hardware Courses
+        array = new ArrayList<>();
+        
+        basicCoursesNeededForHardware = countCoursesNotTaken(basic2CoursesJson, takenCourses);
+        basicCoursesLeftForHardware = getRemainingCourses(basic2CoursesJson, takenCourses);
+        choiceCoursesFromSameBasicLeftForHardware = getRemainingCourses(choice2CoursesJson, takenCourses);
+        choiceCoursesFromSameBasicNeededForHardware -= countCoursesTaken(choice2CoursesJson, takenCourses);
+        if (choiceCoursesFromSameBasicNeededForHardware < 0) {
+            choiceCoursesFromSameBasicNeededForHardware = 0;
+        }
+        
+        choiceCoursesFromSameBasicPassedForHardware = countCoursesTaken(choice2CoursesJson, takenCourses);
+        
+        if (generalCoursesPassed<2){
+            array.addAll(Arrays.asList(basic1CoursesJson, basic3CoursesJson, choice1CoursesJson, choice3CoursesJson, generalCoursesJson));
+        } else {
+            array.addAll(Arrays.asList(basic1CoursesJson, basic3CoursesJson, choice1CoursesJson, choice3CoursesJson));
+        }
+
+        choiceCoursesFromOtherBasicLeftForHardware = combineCourseArrays(array);
+        choiceCoursesFromOtherBasicAvailableForHardware = countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeftForHardware, takenCourses) - generalCoursesPassed;
+        if (choiceCoursesFromOtherBasicAvailableForHardware < 0) {
+            choiceCoursesFromOtherBasicAvailableForHardware = 0;
+        }
+            
+        // Network Courses
+        array = new ArrayList<>();
+        
+        basicCoursesNeededForNetwork = countCoursesNotTaken(basic3CoursesJson, takenCourses);
+        basicCoursesLeftForNetwork = getRemainingCourses(basic3CoursesJson, takenCourses);
+        choiceCoursesFromSameBasicLeftForNetwork = getRemainingCourses(choice3CoursesJson, takenCourses);
+        choiceCoursesFromSameBasicNeededForNetwork -= countCoursesTaken(choice3CoursesJson, takenCourses);
+        if (choiceCoursesFromSameBasicNeededForNetwork < 0) {
+            choiceCoursesFromSameBasicNeededForNetwork = 0;
+        }
+        
+        choiceCoursesFromSameBasicPassedForNetwork = countCoursesTaken(choice3CoursesJson, takenCourses);
+        
+        if (generalCoursesPassed<2){
+            array.addAll(Arrays.asList(basic1CoursesJson, basic2CoursesJson, choice1CoursesJson, choice2CoursesJson, generalCoursesJson));
+        } else {
+            array.addAll(Arrays.asList(basic1CoursesJson, basic2CoursesJson, choice1CoursesJson, choice2CoursesJson));
+        }
+
+        choiceCoursesFromOtherBasicLeftForNetwork = combineCourseArrays(array);
+        choiceCoursesFromOtherBasicAvailableForNetwork = countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeftForNetwork, takenCourses) - generalCoursesPassed;
+        if (choiceCoursesFromOtherBasicAvailableForNetwork < 0) {
+            choiceCoursesFromOtherBasicAvailableForNetwork = 0;
+        }
+        
+        if (totalCourseCount >= 55 && mandatoryCoursesLeft.isEmpty()) {
+            if (basicCoursesNeededForSoftware == 0 && choiceCoursesFromSameBasicNeededForSoftware <= 0 ) {
+                 passedAll = true;
+            }
+                
+            else if (basicCoursesNeededForHardware == 0 && choiceCoursesFromSameBasicNeededForHardware <= 0) {
+                 passedAll = true;
+            }
+            
+            else if (basicCoursesNeededForNetwork == 0 && choiceCoursesFromSameBasicNeededForNetwork <= 0) {
+                 passedAll = true;
+            }
         }
 
         result.setMandatoryCoursesLeft(mandatoryCoursesLeft);
         result.setMandatoryCoursesNeeded(mandatoryCoursesLeft.size());
-        result.setBasicCoursesLeft(basicCoursesLeft);
-        result.setBasicCoursesNeeded(basicCoursesNeeded);
-        result.setChoiceCoursesFromSameBasicLeft(choiceCoursesFromSameBasicLeft);
-        result.setChoiceCoursesFromSameBasicNeeded(choiceCoursesFromSameBasicNeeded);
-        result.setChoiceCoursesFromOtherBasicLeft(choiceCoursesFromOtherBasicLeft);
-        result.setChoiceCoursesFromOtherBasicAvailable(choiceCoursesFromOtherBasicAvailable);
+        
+        result.setBasicCoursesLeftForSoftware(basicCoursesLeftForSoftware);
+        result.setBasicCoursesNeededForSoftware(basicCoursesNeededForSoftware);
+        result.setChoiceCoursesFromSameBasicLeftForSoftware(choiceCoursesFromSameBasicLeftForSoftware);
+        result.setChoiceCoursesFromSameBasicNeededForSoftware(choiceCoursesFromSameBasicNeededForSoftware);
+        result.setChoiceCoursesFromOtherBasicLeftForSoftware(choiceCoursesFromOtherBasicLeftForSoftware);
+        result.setChoiceCoursesFromOtherBasicAvailableForSoftware(choiceCoursesFromOtherBasicAvailableForSoftware);
+        result.setChoiceCoursesFromSameBasicPassedForSoftware(choiceCoursesFromSameBasicPassedForSoftware);
+        
+        result.setBasicCoursesLeftForHardware(basicCoursesLeftForHardware);
+        result.setBasicCoursesNeededForHardware(basicCoursesNeededForHardware);
+        result.setChoiceCoursesFromSameBasicLeftForHardware(choiceCoursesFromSameBasicLeftForHardware);
+        result.setChoiceCoursesFromSameBasicNeededForHardware(choiceCoursesFromSameBasicNeededForHardware);
+        result.setChoiceCoursesFromOtherBasicLeftForHardware(choiceCoursesFromOtherBasicLeftForHardware);
+        result.setChoiceCoursesFromOtherBasicAvailableForHardware(choiceCoursesFromOtherBasicAvailableForHardware);
+        result.setChoiceCoursesFromSameBasicPassedForHardware(choiceCoursesFromSameBasicPassedForHardware);
+        
+        result.setBasicCoursesLeftForNetwork(basicCoursesLeftForNetwork);
+        result.setBasicCoursesNeededForNetwork(basicCoursesNeededForNetwork);
+        result.setChoiceCoursesFromSameBasicLeftForNetwork(choiceCoursesFromSameBasicLeftForNetwork);
+        result.setChoiceCoursesFromSameBasicNeededForNetwork(choiceCoursesFromSameBasicNeededForNetwork);
+        result.setChoiceCoursesFromOtherBasicLeftForNetwork(choiceCoursesFromOtherBasicLeftForNetwork);
+        result.setChoiceCoursesFromOtherBasicAvailableForNetwork(choiceCoursesFromOtherBasicAvailableForNetwork);
+        result.setChoiceCoursesFromSameBasicPassedForNetwork(choiceCoursesFromSameBasicPassedForNetwork);
+        
         result.setGeneralCoursesPassed(generalCoursesPassed);
         result.setGeneralCoursesLeft(generalCoursesLeft);
         result.setPassedAll(passedAll);
@@ -544,21 +594,20 @@ public class UtilFunctions {
 
         return true;
     }
+    
+    private static int countCoursesTaken(JSONArray coursesJson, Set<String> takenCourses) {
+        int count = 0;
 
-    private static ArrayList<Course> countBasicCoursesLeftICE1(JSONArray basic1CoursesJson, JSONArray basic2CoursesJson, JSONArray basic3CoursesJson, Set<String> takenCourses) {
-        int count1 = countCoursesNotTaken(basic1CoursesJson, takenCourses);
-        int count2 = countCoursesNotTaken(basic2CoursesJson, takenCourses);
-        int count3 = countCoursesNotTaken(basic3CoursesJson, takenCourses);
+        for (int i = 0; i < coursesJson.length(); i++) {
+            JSONObject courseJson = coursesJson.getJSONObject(i);
+            String courseId = courseJson.getString("id");
 
-        if (count1 == 4 && count2 == 4 && count3 == 4)
-            return allBasicCourses(basic1CoursesJson, basic2CoursesJson, basic3CoursesJson);
-         else if (count1 <= count2 && count1 <= count3) 
-            return getRemainingCourses(basic1CoursesJson, takenCourses);
-         else if (count2 <= count1 && count2 <= count3) 
-            return getRemainingCourses(basic2CoursesJson, takenCourses);
-         else if (count3 <= count1 && count3 <= count2) 
-            return getRemainingCourses(basic3CoursesJson, takenCourses);
-         else return new ArrayList<>();
+            if (takenCourses.contains(courseId)) {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     private static int countCoursesNotTaken(JSONArray coursesJson, Set<String> takenCourses) {
