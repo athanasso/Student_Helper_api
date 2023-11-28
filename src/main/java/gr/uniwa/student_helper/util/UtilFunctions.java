@@ -120,7 +120,6 @@ public class UtilFunctions {
     private static NeededCoursesICE1 calculateICE1(ArrayList<Course> courses) throws JSONException {
         NeededCoursesICE1 result = new NeededCoursesICE1();
         ArrayList<Course> mandatoryCoursesLeft = new ArrayList<>();
-        ArrayList<Course> basicCoursesLeft = new ArrayList<>();
         
         int basicCoursesNeededForSoftware = 0;
         ArrayList<Course> basicCoursesLeftForSoftware = new ArrayList<>();
@@ -129,6 +128,7 @@ public class UtilFunctions {
         int choiceCoursesFromOtherBasicAvailableForSoftware = 7;
         ArrayList<Course> choiceCoursesFromOtherBasicLeftForSoftware = new ArrayList<>();
         int choiceCoursesFromSameBasicPassedForSoftware = 0;
+        int choiceCoursesPassedForSoftware = 0;
         
         int basicCoursesNeededForHardware = 0;
         ArrayList<Course> basicCoursesLeftForHardware = new ArrayList<>();
@@ -137,6 +137,7 @@ public class UtilFunctions {
         int choiceCoursesFromOtherBasicAvailableForHardware = 7;
         ArrayList<Course> choiceCoursesFromOtherBasicLeftForHardware = new ArrayList<>();
         int choiceCoursesFromSameBasicPassedForHardware = 0;
+        int choiceCoursesPassedForHardware = 0;
         
         int basicCoursesNeededForNetwork = 0;
         ArrayList<Course> basicCoursesLeftForNetwork = new ArrayList<>();
@@ -145,6 +146,7 @@ public class UtilFunctions {
         int choiceCoursesFromOtherBasicAvailableForNetwork = 7;
         ArrayList<Course> choiceCoursesFromOtherBasicLeftForNetwork = new ArrayList<>();
         int choiceCoursesFromSameBasicPassedForNetwork = 0;
+        int choiceCoursesPassedForNetwork = 0;
         
         int generalCoursesPassed = 0;
         ArrayList<Course> generalCoursesLeft = new ArrayList<>();
@@ -160,6 +162,7 @@ public class UtilFunctions {
         JSONArray choice2CoursesJson = curriculumJson.getJSONArray("choice2");
         JSONArray choice3CoursesJson = curriculumJson.getJSONArray("choice3");
         JSONArray generalCoursesJson = curriculumJson.getJSONArray("general");
+        JSONArray specialCoursesJson = curriculumJson.getJSONArray("special");
 
         // Create a set to keep track of the courses already taken
         Set<String> takenCourses = createTakenCoursesSet(courses);
@@ -169,7 +172,6 @@ public class UtilFunctions {
 
         //Check the basic requirements and add courses accordingly
         int totalCourseCount = courses.size();
-        boolean hasSpecialCourse = containsAtLeastOneCourse(courses, "ICE1-9020");
 
         generalCoursesLeft = getRemainingCourses(generalCoursesJson, takenCourses);
         generalCoursesPassed = countCoursesInTakenCourses(generalCoursesJson, takenCourses);
@@ -187,17 +189,12 @@ public class UtilFunctions {
         
         choiceCoursesFromSameBasicPassedForSoftware = countCoursesTaken(choice1CoursesJson, takenCourses);
         
-        if (generalCoursesPassed<2){
-            array.addAll(Arrays.asList(basic2CoursesJson, basic3CoursesJson, choice2CoursesJson, choice3CoursesJson, generalCoursesJson));
-        } else {
-            array.addAll(Arrays.asList(basic2CoursesJson, basic3CoursesJson, choice2CoursesJson, choice3CoursesJson));
-        }
+        array.addAll(Arrays.asList(basic2CoursesJson, basic3CoursesJson, choice2CoursesJson, choice3CoursesJson, specialCoursesJson));
 
         choiceCoursesFromOtherBasicLeftForSoftware = combineCourseArrays(array);
-        choiceCoursesFromOtherBasicAvailableForSoftware = countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeftForSoftware, takenCourses) - generalCoursesPassed;
-        if (choiceCoursesFromOtherBasicAvailableForSoftware < 0) {
-            choiceCoursesFromOtherBasicAvailableForSoftware = 0;
-        }
+        choiceCoursesFromOtherBasicAvailableForSoftware = Math.max(countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeftForSoftware, takenCourses) - generalCoursesPassed, 0);
+        
+        choiceCoursesPassedForSoftware = choiceCoursesFromSameBasicPassedForSoftware + Math.min(Math.min(generalCoursesPassed, 2) + countCoursesTaken(choiceCoursesFromOtherBasicLeftForSoftware, takenCourses), 7) + 4 - basicCoursesNeededForSoftware; 
 
         // Hardware Courses
         array = new ArrayList<>();
@@ -212,18 +209,13 @@ public class UtilFunctions {
         
         choiceCoursesFromSameBasicPassedForHardware = countCoursesTaken(choice2CoursesJson, takenCourses);
         
-        if (generalCoursesPassed<2){
-            array.addAll(Arrays.asList(basic1CoursesJson, basic3CoursesJson, choice1CoursesJson, choice3CoursesJson, generalCoursesJson));
-        } else {
-            array.addAll(Arrays.asList(basic1CoursesJson, basic3CoursesJson, choice1CoursesJson, choice3CoursesJson));
-        }
+        array.addAll(Arrays.asList(basic1CoursesJson, basic3CoursesJson, choice1CoursesJson, choice3CoursesJson, specialCoursesJson));
 
         choiceCoursesFromOtherBasicLeftForHardware = combineCourseArrays(array);
-        choiceCoursesFromOtherBasicAvailableForHardware = countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeftForHardware, takenCourses) - generalCoursesPassed;
-        if (choiceCoursesFromOtherBasicAvailableForHardware < 0) {
-            choiceCoursesFromOtherBasicAvailableForHardware = 0;
-        }
-            
+        choiceCoursesFromOtherBasicAvailableForHardware = Math.max(countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeftForHardware, takenCourses) - generalCoursesPassed,0);
+           
+        choiceCoursesPassedForHardware = choiceCoursesFromSameBasicPassedForHardware + Math.min(Math.min(generalCoursesPassed, 2) + countCoursesTaken(choiceCoursesFromOtherBasicLeftForHardware, takenCourses), 7) + 4 - basicCoursesNeededForHardware; 
+        
         // Network Courses
         array = new ArrayList<>();
         
@@ -237,28 +229,23 @@ public class UtilFunctions {
         
         choiceCoursesFromSameBasicPassedForNetwork = countCoursesTaken(choice3CoursesJson, takenCourses);
         
-        if (generalCoursesPassed<2){
-            array.addAll(Arrays.asList(basic1CoursesJson, basic2CoursesJson, choice1CoursesJson, choice2CoursesJson, generalCoursesJson));
-        } else {
-            array.addAll(Arrays.asList(basic1CoursesJson, basic2CoursesJson, choice1CoursesJson, choice2CoursesJson));
-        }
+        array.addAll(Arrays.asList(basic1CoursesJson, basic2CoursesJson, choice1CoursesJson, choice2CoursesJson, specialCoursesJson));
 
         choiceCoursesFromOtherBasicLeftForNetwork = combineCourseArrays(array);
-        choiceCoursesFromOtherBasicAvailableForNetwork = countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeftForNetwork, takenCourses) - generalCoursesPassed;
-        if (choiceCoursesFromOtherBasicAvailableForNetwork < 0) {
-            choiceCoursesFromOtherBasicAvailableForNetwork = 0;
-        }
+        choiceCoursesFromOtherBasicAvailableForNetwork = Math.max(countCoursesInOthersTakenCourses(choiceCoursesFromOtherBasicLeftForNetwork, takenCourses) - generalCoursesPassed,0);
+        
+        choiceCoursesPassedForNetwork = choiceCoursesFromSameBasicPassedForNetwork + Math.min(Math.min(generalCoursesPassed, 2) + countCoursesTaken(choiceCoursesFromOtherBasicLeftForNetwork, takenCourses), 7) + 4 - basicCoursesNeededForNetwork; 
         
         if (totalCourseCount >= 55 && mandatoryCoursesLeft.isEmpty()) {
-            if (basicCoursesNeededForSoftware == 0 && choiceCoursesFromSameBasicNeededForSoftware <= 0 ) {
+            if (basicCoursesNeededForSoftware == 0 && choiceCoursesFromSameBasicNeededForSoftware <= 0 && choiceCoursesPassedForSoftware>=16) {
                  passedAll = true;
             }
                 
-            else if (basicCoursesNeededForHardware == 0 && choiceCoursesFromSameBasicNeededForHardware <= 0) {
+            else if (basicCoursesNeededForHardware == 0 && choiceCoursesFromSameBasicNeededForHardware <= 0 && choiceCoursesPassedForHardware>=16) {
                  passedAll = true;
             }
             
-            else if (basicCoursesNeededForNetwork == 0 && choiceCoursesFromSameBasicNeededForNetwork <= 0) {
+            else if (basicCoursesNeededForNetwork == 0 && choiceCoursesFromSameBasicNeededForNetwork <= 0 && choiceCoursesPassedForNetwork>=16) {
                  passedAll = true;
             }
         }
@@ -273,6 +260,7 @@ public class UtilFunctions {
         result.setChoiceCoursesFromOtherBasicLeftForSoftware(choiceCoursesFromOtherBasicLeftForSoftware);
         result.setChoiceCoursesFromOtherBasicAvailableForSoftware(choiceCoursesFromOtherBasicAvailableForSoftware);
         result.setChoiceCoursesFromSameBasicPassedForSoftware(choiceCoursesFromSameBasicPassedForSoftware);
+        result.setChoiceCoursesPassedForSoftware(choiceCoursesPassedForSoftware);
         
         result.setBasicCoursesLeftForHardware(basicCoursesLeftForHardware);
         result.setBasicCoursesNeededForHardware(basicCoursesNeededForHardware);
@@ -281,6 +269,7 @@ public class UtilFunctions {
         result.setChoiceCoursesFromOtherBasicLeftForHardware(choiceCoursesFromOtherBasicLeftForHardware);
         result.setChoiceCoursesFromOtherBasicAvailableForHardware(choiceCoursesFromOtherBasicAvailableForHardware);
         result.setChoiceCoursesFromSameBasicPassedForHardware(choiceCoursesFromSameBasicPassedForHardware);
+        result.setChoiceCoursesPassedForHardware(choiceCoursesPassedForHardware);
         
         result.setBasicCoursesLeftForNetwork(basicCoursesLeftForNetwork);
         result.setBasicCoursesNeededForNetwork(basicCoursesNeededForNetwork);
@@ -289,6 +278,7 @@ public class UtilFunctions {
         result.setChoiceCoursesFromOtherBasicLeftForNetwork(choiceCoursesFromOtherBasicLeftForNetwork);
         result.setChoiceCoursesFromOtherBasicAvailableForNetwork(choiceCoursesFromOtherBasicAvailableForNetwork);
         result.setChoiceCoursesFromSameBasicPassedForNetwork(choiceCoursesFromSameBasicPassedForNetwork);
+        result.setChoiceCoursesPassedForNetwork(choiceCoursesPassedForNetwork);
         
         result.setGeneralCoursesPassed(generalCoursesPassed);
         result.setGeneralCoursesLeft(generalCoursesLeft);
@@ -603,6 +593,18 @@ public class UtilFunctions {
             String courseId = courseJson.getString("id");
 
             if (takenCourses.contains(courseId)) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+    
+   private static int countCoursesTaken(ArrayList<Course> courseList, Set<String> takenCourses) {
+        int count = 0;
+
+        for (Course course : courseList) {
+            if (takenCourses.contains(course.getId())) {
                 count++;
             }
         }

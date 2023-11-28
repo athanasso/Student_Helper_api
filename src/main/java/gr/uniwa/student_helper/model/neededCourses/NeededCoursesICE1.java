@@ -14,6 +14,7 @@ public class NeededCoursesICE1 {
     private int choiceCoursesFromOtherBasicAvailableForSoftware;
     private ArrayList<Course> choiceCoursesFromOtherBasicLeftForSoftware;
     private int choiceCoursesFromSameBasicPassedForSoftware;
+    private int choiceCoursesPassedForSoftware;
     private int basicCoursesNeededForHardware;
     private ArrayList<Course> basicCoursesLeftForHardware;
     private int choiceCoursesFromSameBasicNeededForHardware;
@@ -21,6 +22,7 @@ public class NeededCoursesICE1 {
     private int choiceCoursesFromOtherBasicAvailableForHardware;
     private ArrayList<Course> choiceCoursesFromOtherBasicLeftForHardware;
     private int choiceCoursesFromSameBasicPassedForHardware;
+    private int choiceCoursesPassedForHardware;
     private int basicCoursesNeededForNetwork;
     private ArrayList<Course> basicCoursesLeftForNetwork;
     private int choiceCoursesFromSameBasicNeededForNetwork;
@@ -28,6 +30,7 @@ public class NeededCoursesICE1 {
     private int choiceCoursesFromOtherBasicAvailableForNetwork;
     private ArrayList<Course> choiceCoursesFromOtherBasicLeftForNetwork;
     private int choiceCoursesFromSameBasicPassedForNetwork;
+    private int choiceCoursesPassedForNetwork;
     private int generalCoursesPassed;
     private ArrayList<Course> generalCoursesLeft;
     private boolean passedAll;
@@ -42,6 +45,7 @@ public class NeededCoursesICE1 {
         this.choiceCoursesFromOtherBasicAvailableForSoftware = 0;
         this.choiceCoursesFromOtherBasicLeftForSoftware = new ArrayList<>();
         this.choiceCoursesFromSameBasicPassedForSoftware = 0;
+        this.choiceCoursesPassedForSoftware = 0;
         this.basicCoursesNeededForHardware = 0;
         this.basicCoursesLeftForHardware = new ArrayList<>();
         this.choiceCoursesFromSameBasicNeededForHardware = 0;
@@ -49,6 +53,7 @@ public class NeededCoursesICE1 {
         this.choiceCoursesFromOtherBasicAvailableForHardware = 0;
         this.choiceCoursesFromOtherBasicLeftForHardware = new ArrayList<>();
         this.choiceCoursesFromSameBasicPassedForHardware = 0;
+        this.choiceCoursesPassedForHardware = 0;
         this.basicCoursesNeededForNetwork = 0;
         this.basicCoursesLeftForNetwork = new ArrayList<>();
         this.choiceCoursesFromSameBasicNeededForNetwork = 0;
@@ -56,6 +61,7 @@ public class NeededCoursesICE1 {
         this.choiceCoursesFromOtherBasicAvailableForNetwork = 0;
         this.choiceCoursesFromOtherBasicLeftForNetwork = new ArrayList<>();
         this.choiceCoursesFromSameBasicPassedForNetwork = 0;
+        this.choiceCoursesPassedForNetwork = 0;
         this.generalCoursesPassed = 0;
         this.generalCoursesLeft = new ArrayList<>();
         this.passedAll = false;
@@ -132,7 +138,15 @@ public class NeededCoursesICE1 {
     public void setChoiceCoursesFromSameBasicPassedForSoftware(int choiceCoursesFromSameBasicPassedForSoftware) {
         this.choiceCoursesFromSameBasicPassedForSoftware = choiceCoursesFromSameBasicPassedForSoftware;
     }
-    
+
+    public int getChoiceCoursesPassedForSoftware() {
+        return choiceCoursesPassedForSoftware;
+    }
+
+    public void setChoiceCoursesPassedForSoftware(int choiceCoursesPassedForSoftware) {
+        this.choiceCoursesPassedForSoftware = choiceCoursesPassedForSoftware;
+    }
+
     public int getBasicCoursesNeededForHardware() {
         return basicCoursesNeededForHardware;
     }
@@ -187,6 +201,14 @@ public class NeededCoursesICE1 {
 
     public void setChoiceCoursesFromSameBasicPassedForHardware(int choiceCoursesFromSameBasicPassedForHardware) {
         this.choiceCoursesFromSameBasicPassedForHardware = choiceCoursesFromSameBasicPassedForHardware;
+    }
+
+    public int getChoiceCoursesPassedForHardware() {
+        return choiceCoursesPassedForHardware;
+    }
+
+    public void setChoiceCoursesPassedForHardware(int choiceCoursesPassedForHardware) {
+        this.choiceCoursesPassedForHardware = choiceCoursesPassedForHardware;
     }
 
     public int getBasicCoursesNeededForNetwork() {
@@ -245,6 +267,14 @@ public class NeededCoursesICE1 {
         this.choiceCoursesFromSameBasicPassedForNetwork = choiceCoursesFromSameBasicPassedForNetwork;
     }
 
+    public int getChoiceCoursesPassedForNetwork() {
+        return choiceCoursesPassedForNetwork;
+    }
+
+    public void setChoiceCoursesPassedForNetwork(int choiceCoursesPassedForNetwork) {
+        this.choiceCoursesPassedForNetwork = choiceCoursesPassedForNetwork;
+    }
+
     public int getGeneralCoursesPassed() {
         return generalCoursesPassed;
     }
@@ -267,5 +297,5 @@ public class NeededCoursesICE1 {
 
     public void setPassedAll(boolean passedAll) {
         this.passedAll = passedAll;
-    }
+    } 
 }
