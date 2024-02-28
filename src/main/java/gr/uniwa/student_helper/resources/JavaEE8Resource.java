@@ -1,7 +1,9 @@
 package gr.uniwa.student_helper.resources;
 
 
+import gr.uniwa.student_helper.model.FileData;
 import gr.uniwa.student_helper.model.LoginForm;
+import gr.uniwa.student_helper.services.ImportService;
 import gr.uniwa.student_helper.services.ScrapeService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -18,15 +20,33 @@ public class JavaEE8Resource {
 
     @Inject
     ScrapeService scrapeService;
+     
+    @Inject
+    ImportService importService;
 
     private final Logger logger = LoggerFactory.getLogger(JavaEE8Resource.class);
 
+    @Path("login")
     @Produces("application/json")
     @Consumes("application/json")
     @POST
     public Response getStudent(LoginForm loginForm) {
         try {
             ResponseBuilder responseBuilder = scrapeService.getStudent("uniwa", loginForm);
+            return responseBuilder.build();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return Response.status(400).build();
+        }
+    }
+
+    @Path("import")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @POST
+    public Response getStudent(FileData fileData) {
+        try {
+            ResponseBuilder responseBuilder = importService.getStudent(fileData);
             return responseBuilder.build();
         } catch (Exception e) {
             logger.error(e.getMessage());
