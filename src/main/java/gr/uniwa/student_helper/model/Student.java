@@ -6,6 +6,8 @@ public class Student {
     private Grades grades;
 
     public Student() {
+        this.info = new Info();
+        this.grades = new Grades();
     }
 
     public Student(Info info, Grades grades) {

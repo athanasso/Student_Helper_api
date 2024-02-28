@@ -11,6 +11,9 @@ public class Grades {
     private Object neededCourses;
             
     public Grades() {
+        this.totalPassedCourses = "";
+        this.totalAverageGrade = "";
+        this.totalEcts = "";
         this.courses = new ArrayList<>();
     }
 

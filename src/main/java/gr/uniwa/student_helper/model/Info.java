@@ -14,6 +14,16 @@ public class Info {
     private Thesis thesis;
 
     public Info() {
+        this.am = "";
+        this.firstName = "";
+        this.lastName = "";
+        this.department = "";
+        this.currentSemester = "";
+        this.registrationYear = "";
+        this.curriculum = "";
+        this.curriculumCode = "";
+        this.deletionYear = "";
+        this.thesis = new Thesis();
     }
 
     public String getAm() {
