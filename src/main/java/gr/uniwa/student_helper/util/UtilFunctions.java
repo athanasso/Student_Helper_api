@@ -1,6 +1,7 @@
 package gr.uniwa.student_helper.util;
 
 import gr.uniwa.student_helper.model.Course;
+import gr.uniwa.student_helper.model.FileCourse;
 import gr.uniwa.student_helper.model.neededCourses.NeededCoursesICE1;
 import gr.uniwa.student_helper.model.neededCourses.NeededCoursesN1;
 import gr.uniwa.student_helper.model.neededCourses.NeededCoursesN2;
@@ -86,10 +87,47 @@ public class UtilFunctions {
 
         return courses;
     }
+    
+    public static ArrayList<FileCourse> calculateFileCourses(ArrayList<FileCourse> courses, String curriculum) {
+        switch (curriculum) {
+            case "ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)" -> {
+                return filterFileCourses(courses, "ICE1");
+            }
+            case "Υπό Εφαρμογή - Νέο Πρόγραμμα Σπουδών (από 20/9/2014)" -> {
+                return filterFileCourses(courses, "N2");
+            }
+            case "Νέο Πρόγραμμα Σπουδών (από 20/9/2010)" -> {
+                return filterFileCourses(courses, "N1");
+            }
+            case "2017 - ΝΕΟ [24]" -> {
+                ArrayList<FileCourse> filteredCourses = new ArrayList<>();
+                for (FileCourse course : courses) {
+                    if (course.getId().length() >= 6 && course.getId().length() <= 8) {
+                        filteredCourses.add(course);
+                    }
+                }
+                return filteredCourses;
+            }
+            default ->
+                logger.error("Error: couldn't calculate courses");
+        }
+
+        return courses;
+    }
 
     private static ArrayList<Course> filterCourses(ArrayList<Course> courses, String code) {
         ArrayList<Course> filteredCourses = new ArrayList<>();
         for (Course course : courses) {
+            if (course.getId().matches(code+"-\\d{4}")) {
+                filteredCourses.add(course);
+            }
+        }
+        return filteredCourses;
+    }
+    
+    private static ArrayList<FileCourse> filterFileCourses(ArrayList<FileCourse> courses, String code) {
+        ArrayList<FileCourse> filteredCourses = new ArrayList<>();
+        for (FileCourse course : courses) {
             if (course.getId().matches(code+"-\\d{4}")) {
                 filteredCourses.add(course);
             }
