@@ -370,10 +370,8 @@ public class UtilFunctions {
         ArrayList<Course> mandatoryCoursesLeft = new ArrayList<>();
         int basicCoursesNeeded = 5;
         ArrayList<Course> basicCoursesLeft = new ArrayList<>();
-        int choice1CoursesNeeded = 2;
-        ArrayList<Course> choice1CoursesLeft = new ArrayList<>();
-        int choice2CoursesNeeded = 4;
-        ArrayList<Course> choice2CoursesLeft = new ArrayList<>();
+        int choiceCoursesFromSameNeeded = 6;
+        ArrayList<Course> choiceCoursesFromSameLeft = new ArrayList<>();
         int choiceFromOthersBasicPassed = 0; //max2
         ArrayList<Course> choiceFromOthersBasicAvailable = new ArrayList<>();
         boolean passedAll = false;
@@ -385,12 +383,10 @@ public class UtilFunctions {
         JSONArray basic1CoursesJson = curriculumJson.getJSONArray("basic1");
         JSONArray basic2CoursesJson = curriculumJson.getJSONArray("basic2");
         JSONArray basic3CoursesJson = curriculumJson.getJSONArray("basic3");
-        JSONArray choice1_1CoursesJson = curriculumJson.getJSONArray("choice1_1");
-        JSONArray choice2_1CoursesJson = curriculumJson.getJSONArray("choice2_1");
-        JSONArray choice3_1CoursesJson = curriculumJson.getJSONArray("choice3_1");
-        JSONArray choice1_2CoursesJson = curriculumJson.getJSONArray("choice1_2");
-        JSONArray choice2_2CoursesJson = curriculumJson.getJSONArray("choice2_2");
-        JSONArray choice3_2CoursesJson = curriculumJson.getJSONArray("choice2_2");
+        JSONArray choice1CoursesJson = curriculumJson.getJSONArray("choice1");
+        JSONArray choice2CoursesJson = curriculumJson.getJSONArray("choice2");
+        JSONArray choice3CoursesJson = curriculumJson.getJSONArray("choice3");
+
         
         Set<String> takenCourses = createTakenCoursesSet(courses);
         addCoursesToList(mandatoryCoursesLeft, mandatoryCoursesJson, takenCourses);
@@ -398,88 +394,54 @@ public class UtilFunctions {
         int totalCourseCount = courses.size();
         
         if (containsAtLeastOneCourse(basic1CoursesJson,takenCourses)) {
-            coursesCount +=4;
-            choice1CoursesLeft = getRemainingCourses(choice1_1CoursesJson, takenCourses);
-            choice2CoursesLeft = getRemainingCourses(choice1_2CoursesJson, takenCourses);
+            basicCoursesNeeded = countCoursesNotTaken(basic1CoursesJson, takenCourses);
+            basicCoursesLeft = getRemainingCourses(basic1CoursesJson, takenCourses);
             
-            choice1CoursesNeeded = countPassed(choice1_1CoursesJson, takenCourses);
-            choice2CoursesNeeded = countPassed(choice1_2CoursesJson, takenCourses);
+            choiceCoursesFromSameLeft = getRemainingCourses(choice1CoursesJson, takenCourses);
             
-            if (choice1CoursesNeeded>=2){
-                coursesCount+=choice1CoursesNeeded;
-                choice1CoursesNeeded = 0;
-            }
-             if (choice2CoursesNeeded>=4){
-                 coursesCount+=choice2CoursesNeeded;
-                 choice2CoursesNeeded = 0;
-            }
-             
-            if (coursesCount<8){
-                ArrayList<JSONArray> array = new ArrayList<>();
-                array.addAll(Arrays.asList(choice2_1CoursesJson, choice3_1CoursesJson, choice2_2CoursesJson, choice3_2CoursesJson));
-                choiceFromOthersBasicAvailable = combineCourseArrays(array);
-                choiceFromOthersBasicPassed = countPassed(array, takenCourses);
-            }
+            choiceCoursesFromSameNeeded -= countPassed(choice1CoursesJson, takenCourses);
             
-            if (containsAllBasicCourses(basic1CoursesJson, takenCourses)){
-                coursesCount+=5;
-            }
+            ArrayList<JSONArray> temp = new ArrayList<>();
+            ArrayList<Course> array;
+            temp.addAll(Arrays.asList(choice2CoursesJson, choice3CoursesJson));
+            array = combineCourseArrays(temp);
+            
+            choiceFromOthersBasicAvailable = array;
+            choiceFromOthersBasicPassed += countCoursesInTakenCourses(choice2CoursesJson, takenCourses);
+            choiceFromOthersBasicPassed += countCoursesInTakenCourses(choice3CoursesJson, takenCourses);
             
         } else if (containsAtLeastOneCourse(basic2CoursesJson, takenCourses)) {
-            coursesCount +=4;
-            choice1CoursesLeft = getRemainingCourses(choice2_1CoursesJson, takenCourses);
-            choice2CoursesLeft = getRemainingCourses(choice2_2CoursesJson, takenCourses);
+            basicCoursesNeeded = countCoursesNotTaken(basic2CoursesJson, takenCourses);
+            basicCoursesLeft = getRemainingCourses(basic2CoursesJson, takenCourses);
             
-            choice1CoursesNeeded = countPassed(choice2_1CoursesJson, takenCourses);
-            choice2CoursesNeeded = countPassed(choice2_2CoursesJson, takenCourses);
+            choiceCoursesFromSameLeft = getRemainingCourses(choice2CoursesJson, takenCourses);
             
-            if (choice1CoursesNeeded>=2){
-                coursesCount+=choice1CoursesNeeded;
-                choice1CoursesNeeded = 0;
-            }
-             if (choice2CoursesNeeded>=4){
-                 coursesCount+=choice2CoursesNeeded;
-                 choice2CoursesNeeded = 0;
-            }
-             
-            if (coursesCount<8){
-                ArrayList<JSONArray> array = new ArrayList<>();
-                array.addAll(Arrays.asList(choice1_1CoursesJson, choice3_1CoursesJson, choice1_2CoursesJson, choice3_2CoursesJson));
-                choiceFromOthersBasicAvailable = combineCourseArrays(array);
-                choiceFromOthersBasicPassed = countPassed(array, takenCourses);
-            }
+            choiceCoursesFromSameNeeded -= countPassed(choice2CoursesJson, takenCourses);
             
-            if (containsAllBasicCourses(basic2CoursesJson, takenCourses)){
-                coursesCount+=5;
-            }
+            ArrayList<JSONArray> temp = new ArrayList<>();
+            ArrayList<Course> array;
+            temp.addAll(Arrays.asList(choice1CoursesJson, choice3CoursesJson));
+            array = combineCourseArrays(temp);
+            
+            choiceFromOthersBasicAvailable = array;
+            choiceFromOthersBasicPassed += countCoursesInTakenCourses(choice1CoursesJson, takenCourses);
+            choiceFromOthersBasicPassed += countCoursesInTakenCourses(choice3CoursesJson, takenCourses);
             
         } else if (containsAtLeastOneCourse(basic3CoursesJson, takenCourses)) {
-            coursesCount +=4;
-            choice1CoursesLeft = getRemainingCourses(choice3_1CoursesJson, takenCourses);
-            choice2CoursesLeft = getRemainingCourses(choice3_2CoursesJson, takenCourses);
+            basicCoursesNeeded = countCoursesNotTaken(basic3CoursesJson, takenCourses);
+            basicCoursesLeft = getRemainingCourses(basic3CoursesJson, takenCourses);
             
-            choice1CoursesNeeded = countPassed(choice3_1CoursesJson, takenCourses);
-            choice2CoursesNeeded = countPassed(choice3_2CoursesJson, takenCourses);
+            choiceCoursesFromSameLeft = getRemainingCourses(choice3CoursesJson, takenCourses);
             
-            if (choice1CoursesNeeded>=2){
-                coursesCount+=choice1CoursesNeeded;
-                choice1CoursesNeeded = 0;
-            }
-             if (choice2CoursesNeeded>=4){
-                 coursesCount+=choice2CoursesNeeded;
-                 choice2CoursesNeeded = 0;
-            }
-             
-            if (coursesCount<8){
-                ArrayList<JSONArray> array = new ArrayList<>();
-                array.addAll(Arrays.asList(choice1_1CoursesJson, choice2_1CoursesJson, choice1_2CoursesJson, choice2_2CoursesJson));
-                choiceFromOthersBasicAvailable = combineCourseArrays(array);
-                choiceFromOthersBasicPassed = countPassed(array, takenCourses);
-            }
+            choiceCoursesFromSameNeeded -= countPassed(choice3CoursesJson, takenCourses);
             
-            if (containsAllBasicCourses(basic3CoursesJson, takenCourses)){
-                coursesCount+=5;
-            }
+            ArrayList<JSONArray> temp = new ArrayList<>();
+            ArrayList<Course> array;
+            temp.addAll(Arrays.asList(choice1CoursesJson, choice2CoursesJson));
+            array = combineCourseArrays(temp);
+            
+            choiceFromOthersBasicPassed += countCoursesInTakenCourses(choice1CoursesJson, takenCourses);
+            choiceFromOthersBasicPassed += countCoursesInTakenCourses(choice2CoursesJson, takenCourses);
             
         } else {
             basicCoursesLeft = (countBasicCoursesLeftN2(basic1CoursesJson, basic2CoursesJson, basic3CoursesJson, takenCourses));
@@ -497,10 +459,8 @@ public class UtilFunctions {
         result.setMandatoryCoursesNeeded(mandatoryCoursesLeft.size());
         result.setBasicCoursesLeft(basicCoursesLeft);
         result.setBasicCoursesNeeded(basicCoursesNeeded);
-        result.setChoice1CoursesLeft(choice1CoursesLeft);
-        result.setChoice1CoursesNeeded(choice1CoursesNeeded);
-        result.setChoice2CoursesLeft(choice2CoursesLeft);
-        result.setChoice2CoursesNeeded(choice2CoursesNeeded);
+        result.setChoiceCoursesFromSameLeft(choiceCoursesFromSameLeft);
+        result.setChoiceCoursesFromSameNeeded(choiceCoursesFromSameNeeded);
         result.setChoiceFromOthersBasicAvailable(choiceFromOthersBasicAvailable);
         result.setChoiceFromOthersBasicPassed(choiceFromOthersBasicPassed);
         result.setPassedAll(passedAll);
@@ -958,9 +918,9 @@ public class UtilFunctions {
      * Counts the number of basic courses left to be taken based on the given JSON arrays of basic courses,
      * the set of taken courses, and returns the list of remaining courses.
      *
-     * @param basic1CoursesJson The JSON array of basic level 1 courses.
-     * @param basic2CoursesJson The JSON array of basic level 2 courses.
-     * @param basic3CoursesJson The JSON array of basic level 3 courses.
+     * @param basic1CoursesJson The JSON array of basic 1 courses.
+     * @param basic2CoursesJson The JSON array of basic 2 courses.
+     * @param basic3CoursesJson The JSON array of basic 3 courses.
      * @param takenCourses The set of taken courses.
      * @return The list of remaining basic courses to be taken.
      */
@@ -983,13 +943,13 @@ public class UtilFunctions {
     /**
      * Checks if the given JSONArray of basic1CoursesJson contains at least one course that is present in the set of takenCourses.
      *
-     * @param basic1CoursesJson The JSONArray of basic1CoursesJson to check.
+     * @param basic1CoursesJson The JSONArray of basicCoursesJson to check.
      * @param takenCourses The set of takenCourses to compare against.
      * @return true if at least one course is found in takenCourses, false otherwise.
      */
-    private static boolean containsAtLeastOneCourse(JSONArray basic1CoursesJson, Set<String> takenCourses) {
-        for (int i = 0; i < basic1CoursesJson.length(); i++) {
-            JSONObject course = basic1CoursesJson.getJSONObject(i);
+    private static boolean containsAtLeastOneCourse(JSONArray basicCoursesJson, Set<String> takenCourses) {
+        for (int i = 0; i < basicCoursesJson.length(); i++) {
+            JSONObject course = basicCoursesJson.getJSONObject(i);
             String courseId = course.getString("id");
             if (takenCourses.contains(courseId)) {
                 return true;
