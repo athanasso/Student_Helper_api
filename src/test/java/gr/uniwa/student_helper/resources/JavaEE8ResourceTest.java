@@ -5,6 +5,7 @@ import gr.uniwa.student_helper.model.FileData;
 import gr.uniwa.student_helper.model.LoginForm;
 import gr.uniwa.student_helper.services.ImportService;
 import gr.uniwa.student_helper.services.ScrapeService;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
@@ -33,18 +35,6 @@ public class JavaEE8ResourceTest {
     }
 
     @Test
-    public void testGetStudentWithValidLoginForm() {
-        LoginForm loginForm = new LoginForm("username", "password");
-        ResponseBuilder responseBuilder = Response.ok().entity("Student data");
-        when(scrapeService.getStudent("uniwa", loginForm)).thenReturn(responseBuilder);
-
-        Response response = javaEE8Resource.getStudent(loginForm);
-
-        assertEquals(200, response.getStatus());
-        assertEquals("Student data", response.getEntity());
-    }
-
-    @Test
     public void testGetStudentWithValidFileData() {
         ArrayList<FileCourse> courses = new ArrayList();
         FileCourse course = new FileCourse();
@@ -58,15 +48,6 @@ public class JavaEE8ResourceTest {
         assertEquals(200, response.getStatus());
         assertEquals("Student data", response.getEntity());
     }
-    
-    @Test
-    public void testGetStudentWithNullLoginForm() {
-        LoginForm loginForm = null;
-
-        Response response = javaEE8Resource.getStudent(loginForm);
-
-        assertEquals(400, response.getStatus());
-    }
 
     @Test
     public void testGetStudentWithEmptyFileData() {
@@ -75,5 +56,41 @@ public class JavaEE8ResourceTest {
         Response response = javaEE8Resource.getStudent(fileData);
 
         assertEquals(400, response.getStatus());
+    }
+
+    @Test
+    public void testGetStudentWithValidLoginFormAndAuthorizationHeader() {
+        LoginForm loginForm = new LoginForm("username", "password");
+        HttpHeaders headers = mock(HttpHeaders.class);
+        when(headers.getHeaderString(HttpHeaders.AUTHORIZATION)).thenReturn("Basic dXNlcm5hbWU6cGFzc3dvcmQ="); // Authorization header with username:password encoded in Base64
+
+        ResponseBuilder responseBuilder = Response.ok().entity("Student data");
+        when(scrapeService.getStudent("uniwa", loginForm)).thenReturn(responseBuilder);
+
+        Response response = javaEE8Resource.getStudent(loginForm, headers);
+
+        assertEquals(200, response.getStatus());
+        assertEquals("Student data", response.getEntity());
+    }
+
+    @Test
+    public void testGetStudentWithValidLoginFormAndNoAuthorizationHeader() {
+        LoginForm loginForm = new LoginForm("username", "password");
+        HttpHeaders headers = mock(HttpHeaders.class);
+        when(headers.getHeaderString(HttpHeaders.AUTHORIZATION)).thenReturn(null); // No Authorization header
+
+        Response response = javaEE8Resource.getStudent(loginForm, headers);
+
+        assertEquals(401, response.getStatus());
+    }
+
+    @Test
+    public void testGetStudentWithNullLoginForm() {
+        LoginForm loginForm = null;
+        HttpHeaders headers = mock(HttpHeaders.class);
+
+        Response response = javaEE8Resource.getStudent(loginForm, headers);
+
+        assertEquals(401, response.getStatus());
     }
 }
