@@ -15,6 +15,9 @@ import jakarta.ws.rs.core.Response.ResponseBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Represents a resource for handling student-related operations in a Java EE 8 application.
+ */
 @Path("student")
 public class JavaEE8Resource {
 
@@ -26,6 +29,12 @@ public class JavaEE8Resource {
 
     private final Logger logger = LoggerFactory.getLogger(JavaEE8Resource.class);
 
+    /**
+     * Retrieves student information based on the provided login form.
+     * 
+     * @param loginForm The login form containing the necessary credentials.
+     * @return A response containing the student information in JSON format.
+     */
     @Path("login")
     @Produces("application/json")
     @Consumes("application/json")
@@ -40,6 +49,12 @@ public class JavaEE8Resource {
         }
     }
 
+    /**
+     * Imports student data from the provided file.
+     * 
+     * @param fileData The file containing the student data.
+     * @return A response indicating the success or failure of the import operation.
+     */
     @Path("import")
     @Produces("application/json")
     @Consumes("application/json")
