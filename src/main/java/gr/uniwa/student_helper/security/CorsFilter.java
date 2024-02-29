@@ -6,6 +6,7 @@ import jakarta.ws.rs.container.ContainerResponseFilter;
 import jakarta.ws.rs.ext.Provider;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 /**
  * This class is a filter that adds CORS (Cross-Origin Resource Sharing) headers to the HTTP response.
@@ -14,11 +15,13 @@ import java.io.IOException;
  */
 @Provider
 public class CorsFilter implements ContainerResponseFilter {
+    
+    private static final ResourceBundle rb = ResourceBundle.getBundle("application");
 
     @Override
     public void filter(ContainerRequestContext requestContext,
                        ContainerResponseContext responseContext ) throws IOException {
-        responseContext.getHeaders().add("Access-Control-Allow-Origin", "http://localhost:4200");
+        responseContext.getHeaders().add("Access-Control-Allow-Origin", rb.getString("allowed.origin"));
         responseContext.getHeaders().add("Access-Control-Allow-Credentials", "true");
         responseContext.getHeaders().add("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
         responseContext.getHeaders().add("Access-Control-Allow-Headers", "username, password, X-Requested-With, Content-Type, Authorization, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers");
