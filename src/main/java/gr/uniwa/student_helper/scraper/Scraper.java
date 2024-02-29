@@ -20,6 +20,11 @@ import java.util.HashMap;
 import java.util.Map;
 import org.jsoup.nodes.Element;
 
+/**
+ * The Scraper class is responsible for scraping data from the university website.
+ * It handles the authentication process and retrieves various documents such as
+ * student information, grades, and thesis information.
+ */
 public class Scraper {
     private final String UNIVERSITY;
     private final String DOMAIN;
@@ -44,6 +49,16 @@ public class Scraper {
         this.getDocuments(loginForm.getUsername(), loginForm.getPassword(), loginForm.getCookies());
     }
 
+    /**
+     * Retrieves the documents for a given user.
+     * If the cookies are null, it retrieves the HTML pages using the provided username and password.
+     * If the cookies are not null, it retrieves the HTML pages using the cookies.
+     * If the necessary JSON data is not available, it falls back to retrieving the HTML pages using the username and password.
+     *
+     * @param username The username of the user.
+     * @param password The password of the user.
+     * @param cookies  The cookies for the user's session.
+     */
     private void getDocuments(String username, String password, Map<String, String> cookies) {
         if (cookies == null) {
             getHtmlPages(username, password);
@@ -55,6 +70,12 @@ public class Scraper {
         }
     }
 
+    /**
+     * Retrieves HTML pages by performing a login process and making HTTP requests.
+     *
+     * @param username The username for the login process.
+     * @param password The password for the login process.
+     */
     private void getHtmlPages(String username, String password) {
         username = username.trim();
         password = password.trim();
@@ -172,6 +193,11 @@ public class Scraper {
         setCookies(cookie.toString(), _csrf, xProfile);
     }
 
+    /**
+     * Retrieves HTML pages using the provided cookies.
+     *
+     * @param cookies a map containing the necessary cookies for authentication
+     */
     private void getHtmlPages(Map<String, String> cookies) {
         String cookie = cookies.get("cookie");
         String _csrf = cookies.get("_csrf");
@@ -193,6 +219,9 @@ public class Scraper {
         setCookies(cookie, _csrf, xProfile);
     }
 
+    /**
+    * Represents a response from a web server after making a request.
+    */
     private Connection.Response getResponse() {
         try {
             return Jsoup.connect("https://" + DOMAIN + "/")
@@ -208,6 +237,14 @@ public class Scraper {
         return null;
     }
 
+    /**
+     * Sends an HTTP GET request to the specified URL with the given cookie and CSRF token.
+     * 
+     * @param url the URL to send the request to
+     * @param cookie the cookie to include in the request header
+     * @param _csrf the CSRF token to include in the request header
+     * @return the response from the server as a string, or null if the request was unsuccessful
+     */
     private String httpGET(String url, String cookie, String _csrf) {
         try {
             URL obj = new URL(url);
@@ -244,6 +281,15 @@ public class Scraper {
         return null;
     }
 
+    /**
+     * Sends an HTTP GET request to the specified URL with the provided headers and retrieves the response.
+     *
+     * @param url     the URL to send the GET request to
+     * @param cookie  the cookie value to include in the request headers
+     * @param _csrf   the CSRF token value to include in the request headers
+     * @param xProfile the X-Profile value to include in the request headers
+     * @return the response string if the request is successful, or null otherwise
+     */
     private String httpGET(String url, String cookie, String _csrf, String xProfile) {
         try {
             URL obj = new URL(url);
@@ -294,6 +340,12 @@ public class Scraper {
         return null;
     }
 
+    /**
+     * Checks if the provided document contains authorization information.
+     *
+     * @param document The document to check for authorization information.
+     * @return true if the document contains authorization information, false otherwise.
+     */
     private boolean isAuthorized(Document document) {
         String html;
         html = document.toString();
@@ -307,6 +359,12 @@ public class Scraper {
         }
     }
 
+    /**
+     * Retrieves the XProfile from the given JSON string.
+     *
+     * @param infoJSON the JSON string containing the student information
+     * @return the XProfile as a string, or null if it cannot be retrieved
+     */
     private String getXProfile(String infoJSON) {
         try {
             JsonNode node = new ObjectMapper().readTree(infoJSON);

@@ -7,6 +7,11 @@ import jakarta.ws.rs.ext.Provider;
 
 import java.io.IOException;
 
+/**
+ * This class is a filter that adds CORS (Cross-Origin Resource Sharing) headers to the HTTP response.
+ * CORS headers allow a web application running on one domain to access resources from another domain.
+ * This filter adds the necessary headers to enable cross-origin requests from the specified origin.
+ */
 @Provider
 public class CorsFilter implements ContainerResponseFilter {
 

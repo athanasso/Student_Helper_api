@@ -2,6 +2,9 @@ package gr.uniwa.student_helper.common;
 
 import java.util.Random;
 
+/**
+ * The UserAgentGenerator class is responsible for generating random user agent strings.
+ */
 public class UserAgentGenerator {
 
     private static String[] userAgents = {
@@ -23,6 +26,11 @@ public class UserAgentGenerator {
             "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"
     };
 
+    /**
+     * Generates a random user agent string.
+     *
+     * @return A randomly generated user agent string.
+     */
     public static String generate() {
         Random random = new Random();
         int randomIndex = random.nextInt(userAgents.length);

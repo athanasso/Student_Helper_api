@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The ImportService class is responsible for importing student data from a file and generating a StudentDTO object.
+ * It provides methods to process the file data and calculate various information such as grades, average grade, and needed courses.
+ */
 public class ImportService {
     
     private final Logger logger = LoggerFactory.getLogger(ScrapeService.class);

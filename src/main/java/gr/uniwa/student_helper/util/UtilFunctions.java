@@ -14,28 +14,29 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.Arrays;
+import java.util.HashSet;
 import org.json.JSONException;
 
+/**
+ * Utility functions for calculating and filtering courses based on curriculum and other parameters.
+ */
 public class UtilFunctions {
 
     private static final Logger logger = LoggerFactory.getLogger(UtilFunctions.class);
 
     /**
-     * Calculates the filtered courses
+     * Calculates the year of deletion for a student based on their curriculum, registration year, and part-time status.
      *
-     * @param curriculum
-     * @param registrationYear
-     * @param partTime
-     * @return  int
-     * 
+     * @param curriculum The curriculum of the student.
+     * @param registrationYear The registration year of the student.
+     * @param partTime Indicates whether the student is part-time or not.
+     * @return The year of deletion for the student. Returns -1 if the student is part-time.
      */
     public static int calculateYearOfDeletion(String curriculum, int registrationYear, boolean partTime) {
         if (!partTime) {
@@ -54,12 +55,11 @@ public class UtilFunctions {
     }
 
     /**
-     * Calculates the filtered courses
+     * Calculates and returns a filtered list of courses based on the given curriculum.
      *
-     * @param courses
-     * @param curriculum
-     * @return ArrayList<Course>
-     *
+     * @param courses    The list of courses to filter.
+     * @param curriculum The curriculum to use for filtering the courses.
+     * @return The filtered list of courses based on the given curriculum.
      */
     public static ArrayList<Course> calculateCourses(ArrayList<Course> courses, String curriculum) {
         switch (curriculum) {
@@ -88,6 +88,13 @@ public class UtilFunctions {
         return courses;
     }
     
+    /**
+     * Calculates the file courses based on the given curriculum.
+     *
+     * @param courses    The list of file courses.
+     * @param curriculum The curriculum to filter the file courses.
+     * @return The filtered list of file courses based on the curriculum.
+     */
     public static ArrayList<FileCourse> calculateFileCourses(ArrayList<FileCourse> courses, String curriculum) {
         switch (curriculum) {
             case "ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)" -> {
@@ -115,6 +122,13 @@ public class UtilFunctions {
         return courses;
     }
 
+    /**
+     * Filters the given list of courses based on the provided code.
+     *
+     * @param courses The list of courses to filter.
+     * @param code The code to match against the course IDs.
+     * @return The filtered list of courses.
+     */
     private static ArrayList<Course> filterCourses(ArrayList<Course> courses, String code) {
         ArrayList<Course> filteredCourses = new ArrayList<>();
         for (Course course : courses) {
@@ -125,6 +139,13 @@ public class UtilFunctions {
         return filteredCourses;
     }
     
+    /**
+     * Filters the given list of FileCourses based on the provided code.
+     *
+     * @param courses The list of FileCourses to filter.
+     * @param code The code to match against the FileCourse IDs.
+     * @return The filtered list of FileCourses.
+     */
     private static ArrayList<FileCourse> filterFileCourses(ArrayList<FileCourse> courses, String code) {
         ArrayList<FileCourse> filteredCourses = new ArrayList<>();
         for (FileCourse course : courses) {
@@ -135,6 +156,13 @@ public class UtilFunctions {
         return filteredCourses;
     }
 
+    /**
+     * Calculates the needed courses based on the given curriculum.
+     *
+     * @param courses    the list of courses
+     * @param curriculum the curriculum to calculate the needed courses for
+     * @return an Object representing the calculated needed courses
+     */
     public static Object calculateNeededCourses(ArrayList<Course> courses, String curriculum) {
         switch (curriculum) {
             case "ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)" -> {
@@ -155,6 +183,11 @@ public class UtilFunctions {
         return null;
     }
 
+    /**
+     * Represents the needed courses for ICE1 (Information and Communication Engineering) program.
+     * This class contains information about the courses needed and left for the program, including
+     * mandatory courses, basic courses, choice courses, and general courses.
+     */
     private static NeededCoursesICE1 calculateICE1(ArrayList<Course> courses) throws JSONException {
         NeededCoursesICE1 result = new NeededCoursesICE1();
         ArrayList<Course> mandatoryCoursesLeft = new ArrayList<>();
@@ -327,6 +360,9 @@ public class UtilFunctions {
         return result;
     }
     
+    /**
+     * Represents the needed courses for N2 curriculum.
+     */
     private static NeededCoursesN2 calculateN2(ArrayList<Course> courses) {
         
         NeededCoursesN2 result = new NeededCoursesN2();
@@ -472,6 +508,11 @@ public class UtilFunctions {
         return result;
     }
     
+    /**
+     * Represents the needed courses for N1 curriculum.
+     * This class contains information about the mandatory courses, choice courses 1, and choice courses 2.
+     * It also provides methods to get and set the courses left and the number of courses needed.
+     */
     private static NeededCoursesN1 calculateN1(ArrayList<Course> courses) {
         
         NeededCoursesN1 result = new NeededCoursesN1();
@@ -517,6 +558,9 @@ public class UtilFunctions {
         return result;
     }
 
+    /**
+     * Represents the needed courses for a student's PEIR calculation.
+     */
     private static NeededCoursesPeir calculatePeir(ArrayList<Course> courses) {
         NeededCoursesPeir result = new NeededCoursesPeir();
         
@@ -567,10 +611,16 @@ public class UtilFunctions {
         return result;
     }
 
+    /**
+     * Reads a JSON file and returns its content as a JSONObject.
+     *
+     * @param file the name of the JSON file to read
+     * @return the content of the JSON file as a JSONObject, or null if an error occurs
+     */
     private static JSONObject readJson(String file) {
-        try{
+        try {
             // Read the JSON file containing the curriculum data
-            String filePath = "data/curriculums/"+file;
+            String filePath = "data/curriculums/" + file;
             InputStream inputStream = UtilFunctions.class.getClassLoader().getResourceAsStream(filePath);
             String jsonContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
             // Parse the JSON string
@@ -583,7 +633,15 @@ public class UtilFunctions {
         return null;
     }
 
-    private static boolean addCoursesToList(List<Course> neededCourses, JSONArray coursesJson, Set<String> takenCourses) {
+    /**
+     * Adds courses from a JSON array to a list of needed courses, if they are not already taken.
+     *
+     * @param neededCourses The list of needed courses to add the courses to.
+     * @param coursesJson The JSON array containing the courses to be added.
+     * @param takenCourses The set of courses that have already been taken.
+     * @return true if any courses were added to the list, false otherwise.
+     */
+    private static boolean addCoursesToList(ArrayList<Course> neededCourses, JSONArray coursesJson, Set<String> takenCourses) {
         boolean addedCourses = false;
 
         for (int i = 0; i < coursesJson.length(); i++) {
@@ -601,6 +659,13 @@ public class UtilFunctions {
         return addedCourses;
     }
 
+    /**
+     * Checks if the given list of courses contains at least one course with the specified course ID.
+     *
+     * @param courses  the list of courses to search
+     * @param courseId the course ID to look for
+     * @return true if the list contains at least one course with the specified course ID, false otherwise
+     */
     private static boolean containsAtLeastOneCourse(ArrayList<Course> courses, String courseId) {
         for (Course course : courses) {
             if (course.getId().equals(courseId)) {
@@ -610,6 +675,13 @@ public class UtilFunctions {
         return false;
     }
 
+    /**
+     * Checks if the given set of taken courses contains all the basic courses specified in the JSON array.
+     *
+     * @param coursesJson   the JSON array containing the basic courses
+     * @param takenCourses  the set of taken courses
+     * @return true if the set of taken courses contains all the basic courses, false otherwise
+     */
     private static boolean containsAllBasicCourses(JSONArray coursesJson, Set<String> takenCourses) {
         for (int i = 0; i < coursesJson.length(); i++) {
             JSONObject courseJson = coursesJson.getJSONObject(i);
@@ -623,6 +695,13 @@ public class UtilFunctions {
         return true;
     }
     
+    /**
+     * Counts the number of courses taken by a student.
+     *
+     * @param coursesJson   the JSON array containing the courses information
+     * @param takenCourses  the set of course IDs representing the courses taken by the student
+     * @return the number of courses taken by the student
+     */
     private static int countCoursesTaken(JSONArray coursesJson, Set<String> takenCourses) {
         int count = 0;
 
@@ -638,6 +717,13 @@ public class UtilFunctions {
         return count;
     }
     
+    /**
+     * Counts the number of courses taken from a given list of courses.
+     *
+     * @param courseList   the list of courses to check
+     * @param takenCourses the set of courses taken
+     * @return the number of courses taken from the given list
+     */
    private static int countCoursesTaken(ArrayList<Course> courseList, Set<String> takenCourses) {
         int count = 0;
 
@@ -650,6 +736,13 @@ public class UtilFunctions {
         return count;
     }
 
+    /**
+     * Counts the number of courses that have not been taken.
+     *
+     * @param coursesJson   the JSONArray containing the courses information
+     * @param takenCourses  the Set of course IDs that have been taken
+     * @return the count of courses that have not been taken
+     */
     private static int countCoursesNotTaken(JSONArray coursesJson, Set<String> takenCourses) {
         int count = 0;
 
@@ -665,6 +758,13 @@ public class UtilFunctions {
         return count;
     }
 
+    /**
+     * Returns a list of remaining courses based on the given courses JSON array and the set of taken courses.
+     *
+     * @param coursesJson   The JSON array containing the courses information.
+     * @param takenCourses  The set of taken courses.
+     * @return              The list of remaining courses.
+     */
     private static ArrayList<Course> getRemainingCourses(JSONArray coursesJson, Set<String> takenCourses) {
         ArrayList<Course> remainingCourses = new ArrayList<>();
 
@@ -681,6 +781,14 @@ public class UtilFunctions {
         return remainingCourses;
     }
 
+    /**
+     * Combines the basic courses from three different JSON arrays into a single list.
+     *
+     * @param basic1CoursesJson The JSON array containing basic courses for level 1.
+     * @param basic2CoursesJson The JSON array containing basic courses for level 2.
+     * @param basic3CoursesJson The JSON array containing basic courses for level 3.
+     * @return The combined list of basic courses from all three levels.
+     */
     private static ArrayList<Course> allBasicCourses(JSONArray basic1CoursesJson, JSONArray basic2CoursesJson, JSONArray basic3CoursesJson) {
         ArrayList<Course> allCourses = new ArrayList<>();
 
@@ -691,6 +799,12 @@ public class UtilFunctions {
         return allCourses;
     }
 
+    /**
+     * Adds courses from a JSONArray to an ArrayList of Course objects.
+     *
+     * @param courseList  the ArrayList to which the courses will be added
+     * @param coursesJson the JSONArray containing the course data
+     */
     private static void addCoursesToList(ArrayList<Course> courseList, JSONArray coursesJson) {
         for (int i = 0; i < coursesJson.length(); i++) {
             JSONObject courseJson = coursesJson.getJSONObject(i);
@@ -701,6 +815,13 @@ public class UtilFunctions {
         }
     }
 
+    /**
+     * Counts the number of courses in the given coursesList that are not present in the takenCourses set.
+     *
+     * @param coursesList  the list of courses to check
+     * @param takenCourses the set of courses that have been taken
+     * @return the count of courses in coursesList that are not present in takenCourses
+     */
     private static int countCoursesInOthersTakenCourses(ArrayList<Course> coursesList, Set<String> takenCourses) {
         int count = 7;
 
@@ -713,6 +834,12 @@ public class UtilFunctions {
         return count;
     }
 
+    /**
+     * Combines multiple arrays of courses into a single ArrayList of courses.
+     *
+     * @param arrays The ArrayList of JSONArrays containing courses to be combined.
+     * @return The combined ArrayList of courses.
+     */
     private static ArrayList<Course> combineCourseArrays(ArrayList<JSONArray> arrays) {
         ArrayList<Course> combinedCourses = new ArrayList<>();
 
@@ -723,6 +850,13 @@ public class UtilFunctions {
         return combinedCourses;
     }
 
+    /**
+     * Counts the number of courses in the given JSONArray that are present in the set of taken courses.
+     *
+     * @param coursesJson   the JSONArray containing the courses
+     * @param takenCourses  the set of taken courses
+     * @return the count of courses in the JSONArray that are present in the set of taken courses
+     */
     private static int countCoursesInTakenCourses(JSONArray coursesJson, Set<String> takenCourses) {
         int count = 0;
 
@@ -738,6 +872,12 @@ public class UtilFunctions {
         return count;
     }
 
+    /**
+     * Creates a set of taken courses based on the provided list of courses.
+     *
+     * @param courses the list of courses
+     * @return a set of taken courses
+     */
     private static Set<String> createTakenCoursesSet(ArrayList<Course> courses) {
         Set<String> takenCourses = new HashSet<>();
         for (Course course : courses) {
@@ -746,6 +886,15 @@ public class UtilFunctions {
         return takenCourses;
     }
     
+    /**
+     * Counts the number of courses in the given JSON arrays that are present in the set of taken courses.
+     * If the JSON array is the "generalCoursesJson", the number of general courses taken separately is counted.
+     * The count of general courses is limited to a maximum of 2.
+     *
+     * @param coursesJsonArrays The list of JSON arrays containing courses.
+     * @param takenCourses      The set of taken courses.
+     * @return The total count of courses in the JSON arrays that are present in the set of taken courses.
+     */
     private static int countCoursesInTakenCoursesFromJsonArrays(ArrayList<JSONArray> coursesJsonArrays, Set<String> takenCourses) {
         int count = 0;
         int generalCount = 0;
@@ -765,6 +914,13 @@ public class UtilFunctions {
         return count;
     }
 
+    /**
+     * Counts the number of courses that have been passed based on the given courses and taken courses.
+     *
+     * @param courses      the JSONArray containing the courses
+     * @param takenCourses the Set of taken courses
+     * @return the number of courses that have been passed
+     */
     private static int countPassed(JSONArray courses, Set<String> takenCourses) {
         int count = 0;
         for (int i = 0; i < courses.length(); i++) {
@@ -777,6 +933,13 @@ public class UtilFunctions {
         return count;
     }
 
+    /**
+     * Counts the number of passed courses in the given array, based on the set of taken courses.
+     *
+     * @param array         the array of courses to check
+     * @param takenCourses  the set of taken courses
+     * @return the number of passed courses
+     */
     private static int countPassed(ArrayList<JSONArray> array, Set<String> takenCourses) {
         int count = 0;
         for (JSONArray courses : array) {
@@ -791,6 +954,16 @@ public class UtilFunctions {
         return count;
     }
 
+    /**
+     * Counts the number of basic courses left to be taken based on the given JSON arrays of basic courses,
+     * the set of taken courses, and returns the list of remaining courses.
+     *
+     * @param basic1CoursesJson The JSON array of basic level 1 courses.
+     * @param basic2CoursesJson The JSON array of basic level 2 courses.
+     * @param basic3CoursesJson The JSON array of basic level 3 courses.
+     * @param takenCourses The set of taken courses.
+     * @return The list of remaining basic courses to be taken.
+     */
     private static ArrayList<Course> countBasicCoursesLeftN2(JSONArray basic1CoursesJson, JSONArray basic2CoursesJson, JSONArray basic3CoursesJson, Set<String> takenCourses) {
         int count1 = countCoursesNotTaken(basic1CoursesJson, takenCourses);
         int count2 = countCoursesNotTaken(basic2CoursesJson, takenCourses);
@@ -807,6 +980,13 @@ public class UtilFunctions {
          else return new ArrayList<>();
     }
 
+    /**
+     * Checks if the given JSONArray of basic1CoursesJson contains at least one course that is present in the set of takenCourses.
+     *
+     * @param basic1CoursesJson The JSONArray of basic1CoursesJson to check.
+     * @param takenCourses The set of takenCourses to compare against.
+     * @return true if at least one course is found in takenCourses, false otherwise.
+     */
     private static boolean containsAtLeastOneCourse(JSONArray basic1CoursesJson, Set<String> takenCourses) {
         for (int i = 0; i < basic1CoursesJson.length(); i++) {
             JSONObject course = basic1CoursesJson.getJSONObject(i);
@@ -818,6 +998,12 @@ public class UtilFunctions {
         return false;
     }
     
+    /**
+     * Converts a timestamp string to a formatted date string.
+     *
+     * @param timestampString the timestamp string to convert
+     * @return the formatted date string
+     */
     public static String convertTimestampToString(String timestampString) {
         if (timestampString=="null") return "N/A";
         
@@ -833,6 +1019,12 @@ public class UtilFunctions {
     }
 
 
+    /**
+     * Calculates the curriculum identifier based on the given curriculum.
+     *
+     * @param curriculum the curriculum for which to calculate the identifier
+     * @return the curriculum identifier
+     */
     public static String calculateCurriculumIdentifier(String curriculum) {
         switch (curriculum) {
             case "ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)" -> {

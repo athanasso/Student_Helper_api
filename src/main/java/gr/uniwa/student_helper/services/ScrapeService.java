@@ -9,6 +9,10 @@ import jakarta.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The ScrapeService class is responsible for scraping student information from a specific university's website.
+ * It provides methods to retrieve student data and handle any errors that may occur during the scraping process.
+ */
 public class ScrapeService {
     
     private final Logger logger = LoggerFactory.getLogger(ScrapeService.class);

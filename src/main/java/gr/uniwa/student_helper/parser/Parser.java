@@ -15,6 +15,11 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+/**
+ * The Parser class is responsible for parsing JSON data and extracting relevant information about a student.
+ * It provides methods to parse student information, grades, and thesis data from JSON strings.
+ * The parsed data is used to create a Student object that encapsulates the student's information, grades, and thesis details.
+ */
 public class Parser {
 
     private Exception exception;
@@ -71,6 +76,9 @@ public class Parser {
         }
     }
 
+    /**
+     * Represents the grades of a student.
+     */
     private Grades parseGradesJSON(String gradesJSON, String totalAverageGrade) {
         Grades grades = new Grades();
         ArrayList<Course> courses = new ArrayList<>();
@@ -136,6 +144,9 @@ public class Parser {
         }
     }
 
+    /**
+     * Represents a thesis.
+     */
     private Thesis parseThesissJSON(String thesisJSON) {
         Thesis thesis = new Thesis();
         try {
@@ -167,6 +178,15 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses the information and grades JSON data and returns a Student object.
+     *
+     * @param infoJSON The JSON string containing the student's information.
+     * @param gradesJSON The JSON string containing the student's grades.
+     * @param thesisJSON The JSON string containing the student's thesis information.
+     * @param totalAverageGrade The total average grade of the student.
+     * @return A Student object representing the parsed data, or null if there was an error during parsing.
+     */
     public Student parseInfoAndGradesJSON(String infoJSON, String gradesJSON, String thesisJSON, String totalAverageGrade) {
         Student student = new Student();
 
