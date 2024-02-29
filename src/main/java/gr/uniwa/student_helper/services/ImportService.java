@@ -38,13 +38,13 @@ public class ImportService {
             String curriculum = fileData.getCurriculum();
             BigDecimal sum = new BigDecimal("0");
             int ects = 0;
-            
+                        
             info.setCurriculum(curriculum);
             info.setRegistrationYear(fileData.getRegistrationYear());
             info.setCurriculumCode(UtilFunctions.calculateCurriculumIdentifier(fileData.getCurriculum()));
             
             temp = UtilFunctions.calculateFileCourses(fileCourses, curriculum);
-            
+
             for (FileCourse fileCourse : temp) {
                 if ( Double.parseDouble(fileCourse.getGrade()) >= 5) {
                     sum = sum.add(BigDecimal.valueOf(Double.parseDouble(fileCourse.getGrade())).multiply(BigDecimal.valueOf(Double.parseDouble(fileCourse.getEcts()))) );
@@ -53,7 +53,7 @@ public class ImportService {
                     courses.add(course);
                 }
             }
-            
+
             if (!fileData.getRegistrationYear().equals("")){
                 int deletionYear = UtilFunctions.calculateYearOfDeletion(curriculum, Integer.parseInt(fileData.getRegistrationYear()), false);
                 info.setDeletionYear(Integer.toString(deletionYear - 1) + "-" + Integer.toString(deletionYear));
@@ -63,8 +63,10 @@ public class ImportService {
             grades.setTotalPassedCourses(String.valueOf(courses.size()));
             grades.setTotalEcts(String.valueOf(ects));
             
-            BigDecimal totalAverageGrade = sum.divide(BigDecimal.valueOf(ects), 2, RoundingMode.HALF_UP);
-            grades.setTotalAverageGrade(totalAverageGrade.toString());
+            if (ects != 0){
+                BigDecimal totalAverageGrade = sum.divide(BigDecimal.valueOf(ects), 2, RoundingMode.HALF_UP);
+                grades.setTotalAverageGrade(totalAverageGrade.toString());
+            }
             
             grades.setNeededCourses(UtilFunctions.calculateNeededCourses(courses, curriculum));
             
@@ -80,9 +82,12 @@ public class ImportService {
             logger.debug("student read");
             
             return Response.ok(studentDTO);
+        } catch (NumberFormatException e) {
+            logger.error("Invalid number format", e);
+            return Response.status(400);
         } catch (Exception e){
             logger.error(e.getMessage(), e);
-            return Response.status(400);
+            return Response.status(500);
         }
     }
 }
