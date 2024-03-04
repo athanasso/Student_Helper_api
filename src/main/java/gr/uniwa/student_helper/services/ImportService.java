@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ImportService {
     
-    private final Logger logger = LoggerFactory.getLogger(ScrapeService.class);
+    private final Logger logger = LoggerFactory.getLogger(ImportService.class);
 
     public Response.ResponseBuilder getStudent(FileData fileData) {
         return getUniwaStudent(fileData);
@@ -37,7 +37,7 @@ public class ImportService {
             ArrayList<FileCourse> fileCourses = fileData.getCourses();
             String curriculum = fileData.getCurriculum();
             BigDecimal sum = new BigDecimal("0");
-            int ects = 0;
+            float ects = 0;
                         
             info.setCurriculum(curriculum);
             info.setRegistrationYear(fileData.getRegistrationYear());
@@ -49,7 +49,7 @@ public class ImportService {
             for (FileCourse fileCourse : temp) {
                 if ( Double.parseDouble(fileCourse.getGrade()) >= 5) {
                     sum = sum.add(BigDecimal.valueOf(Double.parseDouble(fileCourse.getGrade())).multiply(BigDecimal.valueOf(Double.parseDouble(fileCourse.getEcts()))) );
-                    ects += Integer.parseInt(fileCourse.getEcts());
+                    ects += Float.parseFloat(fileCourse.getEcts());
                     Course course = new Course(fileCourse.getId(), fileCourse.getName(), fileCourse.getGrade());
                     courses.add(course);
                 }
