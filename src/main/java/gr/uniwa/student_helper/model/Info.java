@@ -9,6 +9,7 @@ public class Info {
     private String currentSemester;
     private String registrationYear;
     private String curriculum;
+    private String flow;
     private String curriculumCode;
     private String deletionYear;
     private Thesis thesis;
@@ -21,6 +22,7 @@ public class Info {
         this.currentSemester = "";
         this.registrationYear = "";
         this.curriculum = "";
+        this.flow = "";
         this.curriculumCode = "";
         this.deletionYear = "";
         this.thesis = new Thesis();
@@ -80,6 +82,14 @@ public class Info {
 
     public void setCurriculum(String curriculum) {
         this.curriculum = curriculum;
+    }
+
+    public String getFlow() {
+        return flow;
+    }
+
+    public void setFlow(String flow) {
+        this.flow = flow;
     }
 
     public String getCurriculumCode() {

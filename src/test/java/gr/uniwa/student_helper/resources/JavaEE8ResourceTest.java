@@ -39,7 +39,7 @@ public class JavaEE8ResourceTest {
         ArrayList<FileCourse> courses = new ArrayList();
         FileCourse course = new FileCourse();
         courses.add(course);
-        FileData fileData = new FileData("ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)", "2017",courses);
+        FileData fileData = new FileData("ΠΡΟΓΡΑΜΜΑ 5 ΕΤΩΝ ΣΠΟΥΔΩΝ (2019)", "", "2017",courses);
         ResponseBuilder responseBuilder = Response.ok().entity("Student data");
         when(importService.getStudent(fileData)).thenReturn(responseBuilder);
 
@@ -51,7 +51,7 @@ public class JavaEE8ResourceTest {
 
     @Test
     public void testGetStudentWithEmptyFileData() {
-        FileData fileData = new FileData("", "", new ArrayList<>());
+        FileData fileData = new FileData("", "", "", new ArrayList<>());
 
         Response response = javaEE8Resource.getStudent(fileData);
 

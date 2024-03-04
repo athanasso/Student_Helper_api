@@ -5,11 +5,13 @@ import java.util.ArrayList;
 public class FileData {
     private String curriculum;
     private String registrationYear;
+    private String flow;
     private ArrayList<FileCourse> courses;
 
-    public FileData(String curriculum, String registrationYear, ArrayList<FileCourse> courses) {
+    public FileData(String curriculum, String registrationYear, String flow, ArrayList<FileCourse> courses) {
         this.curriculum = curriculum;
         this.registrationYear = registrationYear;
+        this.flow = flow;
         this.courses = courses;
     }
 
@@ -30,6 +32,14 @@ public class FileData {
 
     public void setRegistrationYear(String registrationYear) {
         this.registrationYear = registrationYear;
+    }
+
+    public String getFlow() {
+        return flow;
+    }
+
+    public void setFlow(String flow) {
+        this.flow = flow;
     }
 
     public ArrayList<FileCourse> getCourses() {

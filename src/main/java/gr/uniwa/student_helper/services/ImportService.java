@@ -42,6 +42,7 @@ public class ImportService {
             info.setCurriculum(curriculum);
             info.setRegistrationYear(fileData.getRegistrationYear());
             info.setCurriculumCode(UtilFunctions.calculateCurriculumIdentifier(fileData.getCurriculum()));
+            info.setFlow(fileData.getFlow());
             
             temp = UtilFunctions.calculateFileCourses(fileCourses, curriculum);
 
@@ -68,7 +69,7 @@ public class ImportService {
                 grades.setTotalAverageGrade(totalAverageGrade.toString());
             }
             
-            grades.setNeededCourses(UtilFunctions.calculateNeededCourses(courses, curriculum));
+            grades.setNeededCourses(UtilFunctions.calculateNeededCourses(courses, curriculum, fileData.getFlow()));
             
             student.setInfo(info);
             student.setGrades(grades);

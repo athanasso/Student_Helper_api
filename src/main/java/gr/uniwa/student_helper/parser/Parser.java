@@ -27,6 +27,7 @@ public class Parser {
     private final String PRE_LOG;
     private final Logger logger = LoggerFactory.getLogger(Parser.class);
     private String curriculum;
+    private String flow;
 
     public Parser(String university, String system) {
         this.PRE_LOG = university + (system == null ? "" : "." + system);
@@ -54,8 +55,13 @@ public class Parser {
             info.setRegistrationYear(registrationYear);
 
             String curriculum = student.get("programTitle").asText();
+            
+            String flow = student.get("programSubjectTitle").asText();
+            
             info.setCurriculum(curriculum);
             this.setCurriculum(curriculum);
+            info.setFlow(flow);
+            this.setFlow(flow);
             
             info.setCurriculumCode(UtilFunctions.calculateCurriculumIdentifier(curriculum));
 
@@ -133,7 +139,7 @@ public class Parser {
             grades.setTotalAverageGrade(totalAverageGrade);
             grades.setTotalPassedCourses(String.valueOf(count));
             grades.setCourses(UtilFunctions.calculateCourses(courses, this.getCurriculum()));
-            grades.setNeededCourses(UtilFunctions.calculateNeededCourses(grades.getCourses(), this.getCurriculum()));
+            grades.setNeededCourses(UtilFunctions.calculateNeededCourses(grades.getCourses(), this.getCurriculum(), this.getFlow()));
             
             return grades;
         } catch (IOException e) {
@@ -234,5 +240,13 @@ public class Parser {
 
     public Exception getException() {
         return exception;
+    }
+
+    private void setFlow(String flow) {
+        this.flow = flow;
+    }
+    
+    private String getFlow(){
+        return this.flow;
     }
 }
