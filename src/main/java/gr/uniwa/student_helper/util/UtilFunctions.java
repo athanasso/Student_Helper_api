@@ -73,13 +73,7 @@ public class UtilFunctions {
                 return filterCourses(courses, "N1");
             }
             case "2017 - ΝΕΟ [24]" -> {
-                ArrayList<Course> filteredCourses = new ArrayList<>();
-                for (Course course : courses) {
-                    if (course.getId().length() >= 6 && course.getId().length() <= 8) {
-                        filteredCourses.add(course);
-                    }
-                }
-                return filteredCourses;
+                return filterCourses(courses);
             }
             default ->
                 logger.error("Error: couldn't calculate courses");
@@ -107,13 +101,7 @@ public class UtilFunctions {
                 return filterFileCourses(courses, "N1");
             }
             case "2017 - ΝΕΟ [24]" -> {
-                ArrayList<FileCourse> filteredCourses = new ArrayList<>();
-                for (FileCourse course : courses) {
-                    if (course.getId().length() >= 6 && course.getId().length() <= 8) {
-                        filteredCourses.add(course);
-                    }
-                }
-                return filteredCourses;
+                return filterFileCourses(courses);
             }
             default ->
                 logger.error("Error: couldn't calculate courses");
@@ -153,6 +141,93 @@ public class UtilFunctions {
                 filteredCourses.add(course);
             }
         }
+        return filteredCourses;
+    }
+    
+    /**
+     * Filters the given list of courses based on the information extracted from a JSON file.
+     *
+     * @param courses The list of courses to be filtered.
+     * @return The filtered list of courses.
+     */
+    private static ArrayList<Course> filterCourses(ArrayList<Course> courses) {
+        ArrayList<Course> filteredCourses = new ArrayList<>();
+
+        try {
+            // Read the JSON file
+            JSONObject curriculumJson = readJson("peir.json");
+
+            // Extract the necessary information from the JSON
+            JSONArray mandatoryCoursesJson = curriculumJson.getJSONArray("mandatory");
+            JSONArray choiceCoursesJson = curriculumJson.getJSONArray("choice");
+
+            // Iterate through the list of courses and filter based on JSON information
+            for (Course course : courses) {
+                String courseId = course.getId();
+
+                // Check if the course ID is in the "mandatory" or "choice" JSON arrays
+                if (isCourseInJsonArray(courseId, mandatoryCoursesJson) || isCourseInJsonArray(courseId, choiceCoursesJson)) {
+                    filteredCourses.add(course);
+                }
+            }
+        } catch (JSONException e) {
+           logger.error("Error: couldn't filter courses", e.getMessage());
+        }
+
+        return filteredCourses;
+    }
+
+    /**
+     * Helper method to check if the course ID is in the JSON array
+     * Checks if a given course ID is present in a JSONArray.
+     *
+     * @param courseId the course ID to search for
+     * @param jsonArray the JSONArray to search in
+     * @return true if the course ID is found in the JSONArray, false otherwise
+     */
+    private static boolean isCourseInJsonArray(String courseId, JSONArray jsonArray) {
+        for (int i = 0; i < jsonArray.length(); i++) {
+            Object obj = jsonArray.get(i);
+            if (obj instanceof JSONObject) {
+                JSONObject jsonObj = (JSONObject) obj;
+                if (jsonObj.has("id") && jsonObj.getString("id").equals(courseId)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Filters the given list of FileCourses based on the information extracted from a JSON file.
+     *
+     * @param courses The list of FileCourses to be filtered.
+     * @return The filtered list of FileCourses.
+     */
+    private static ArrayList<FileCourse> filterFileCourses(ArrayList<FileCourse> courses) {
+        ArrayList<FileCourse> filteredCourses = new ArrayList<>();
+
+        try {
+            // Read the JSON file
+            JSONObject curriculumJson = readJson("peir.json");
+
+            // Extract the necessary information from the JSON
+            JSONArray mandatoryCoursesJson = curriculumJson.getJSONArray("mandatory");
+            JSONArray choiceCoursesJson = curriculumJson.getJSONArray("choice");
+
+            // Iterate through the list of courses and filter based on JSON information
+            for (FileCourse course : courses) {
+                String courseId = course.getId();
+
+                // Check if the course ID is in the "mandatory" or "choice" JSON arrays
+                if (isCourseInJsonArray(courseId, mandatoryCoursesJson) || isCourseInJsonArray(courseId, choiceCoursesJson)) {
+                    filteredCourses.add(course);
+                }
+            }
+        } catch (JSONException e) {
+            logger.error("Error: couldn't filter courses", e);
+        }
+
         return filteredCourses;
     }
 
@@ -557,48 +632,31 @@ public class UtilFunctions {
         NeededCoursesPeir result = new NeededCoursesPeir();
         
         ArrayList<Course> mandatoryCoursesLeft = new ArrayList<>();
-        int choiceCourses1Needed = 1;
-        ArrayList<Course> choiceCourses1Left = new ArrayList<>();
-        int choiceCourses2Needed = 1;
-        ArrayList<Course> choiceCourses2Left = new ArrayList<>();
-        int choiceCourses3Needed = 2;
-        ArrayList<Course> choiceCourses3Left = new ArrayList<>();
+        int choiceCoursesNeeded = 4;
+        ArrayList<Course> choiceCoursesLeft = new ArrayList<>();
         boolean passedAll = false;
 
         JSONObject curriculumJson = readJson("peir.json");
 
         JSONArray mandatoryCoursesJson = curriculumJson.getJSONArray("mandatory");
-        JSONArray choice1CoursesJson = curriculumJson.getJSONArray("choice1");
-        JSONArray choice2CoursesJson = curriculumJson.getJSONArray("choice2");
-        JSONArray choice3CoursesJson = curriculumJson.getJSONArray("choice3");
+        JSONArray choiceCoursesJson = curriculumJson.getJSONArray("choice");
 
         Set<String> takenCourses = createTakenCoursesSet(courses);
 
         addCoursesToList(mandatoryCoursesLeft, mandatoryCoursesJson, takenCourses);
-        addCoursesToList(choiceCourses1Left, choice1CoursesJson, takenCourses);
-        addCoursesToList(choiceCourses2Left, choice2CoursesJson, takenCourses);
-        addCoursesToList(choiceCourses3Left, choice3CoursesJson, takenCourses);
+        addCoursesToList(choiceCoursesLeft, choiceCoursesJson, takenCourses);
+
+        choiceCoursesNeeded -= 14-choiceCoursesLeft.size();
         
-        choiceCourses1Needed -= 4-choiceCourses1Left.size();
-        choiceCourses2Needed -= 5-choiceCourses2Left.size();
-        choiceCourses3Needed -= 5-choiceCourses3Left.size();
-        
-        if (choiceCourses1Needed<=0 && choiceCourses2Needed<=0 && choiceCourses3Needed<=0){
-            if (mandatoryCoursesLeft.isEmpty()) {
-                passedAll = true;
-            }
-            
-            choiceCourses1Needed=0;
-            choiceCourses2Needed=0;
-            choiceCourses3Needed=0;
-        }
-              
+        if (mandatoryCoursesLeft.isEmpty() && choiceCoursesNeeded<=0 ){//39 courses of which 5 are choice
+            passedAll = true;
+            choiceCoursesNeeded=0;
+        }     
+                
         result.setMandatoryCoursesLeft(mandatoryCoursesLeft);
         result.setMandatoryCoursesNeeded(mandatoryCoursesLeft.size());
-        result.setChoiceCourses1Left(choiceCourses1Left);
-        result.setChoiceCourses1Needed(choiceCourses1Needed);
-        result.setChoiceCourses2Left(choiceCourses2Left);
-        result.setMandatoryCoursesNeeded(choiceCourses2Needed);
+        result.setChoiceCoursesLeft(choiceCoursesLeft);
+        result.setChoiceCoursesNeeded(choiceCoursesNeeded);
         result.setPassedAll(passedAll);
         return result;
     }
