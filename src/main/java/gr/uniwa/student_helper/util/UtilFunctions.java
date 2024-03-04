@@ -70,10 +70,10 @@ public class UtilFunctions {
                 return filterCourses(courses, "N2");
             }
             case "Νέο Πρόγραμμα Σπουδών (από 20/9/2010)" -> {
-                return filterCourses(courses, "N1");
+                return filterCourses("N1.json", courses);
             }
             case "2017 - ΝΕΟ [24]" -> {
-                return filterCourses(courses);
+                return filterCourses("peir.json", courses);
             }
             default ->
                 logger.error("Error: couldn't calculate courses");
@@ -98,10 +98,10 @@ public class UtilFunctions {
                 return filterFileCourses(courses, "N2");
             }
             case "Νέο Πρόγραμμα Σπουδών (από 20/9/2010)" -> {
-                return filterFileCourses(courses, "N1");
+                return filterFileCourses("N1.json", courses);
             }
             case "2017 - ΝΕΟ [24]" -> {
-                return filterFileCourses(courses);
+                return filterFileCourses("peir.json", courses);
             }
             default ->
                 logger.error("Error: couldn't calculate courses");
@@ -150,12 +150,12 @@ public class UtilFunctions {
      * @param courses The list of courses to be filtered.
      * @return The filtered list of courses.
      */
-    private static ArrayList<Course> filterCourses(ArrayList<Course> courses) {
+    private static ArrayList<Course> filterCourses(String jsonString, ArrayList<Course> courses) {
         ArrayList<Course> filteredCourses = new ArrayList<>();
 
         try {
             // Read the JSON file
-            JSONObject curriculumJson = readJson("peir.json");
+            JSONObject curriculumJson = readJson(jsonString);
 
             // Extract the necessary information from the JSON
             JSONArray mandatoryCoursesJson = curriculumJson.getJSONArray("mandatory");
@@ -204,12 +204,12 @@ public class UtilFunctions {
      * @param courses The list of FileCourses to be filtered.
      * @return The filtered list of FileCourses.
      */
-    private static ArrayList<FileCourse> filterFileCourses(ArrayList<FileCourse> courses) {
+    private static ArrayList<FileCourse> filterFileCourses(String jsonString, ArrayList<FileCourse> courses) {
         ArrayList<FileCourse> filteredCourses = new ArrayList<>();
 
         try {
             // Read the JSON file
-            JSONObject curriculumJson = readJson("peir.json");
+            JSONObject curriculumJson = readJson(jsonString);
 
             // Extract the necessary information from the JSON
             JSONArray mandatoryCoursesJson = curriculumJson.getJSONArray("mandatory");
@@ -584,43 +584,31 @@ public class UtilFunctions {
         
         NeededCoursesN1 result = new NeededCoursesN1();
         ArrayList<Course> mandatoryCoursesLeft = new ArrayList<>();
-        int choiceCourses1Needed = 2;
-        ArrayList<Course> choiceCourses1Left = new ArrayList<>();
-        int choiceCourses2Needed = 6;
-        ArrayList<Course> choiceCourses2Left = new ArrayList<>();
+        int choiceCoursesNeeded = 8;
+        ArrayList<Course> choiceCoursesLeft = new ArrayList<>();
         boolean passedAll = false;
 
         JSONObject curriculumJson = readJson("N1.json");
 
         JSONArray mandatoryCoursesJson = curriculumJson.getJSONArray("mandatory");
-        JSONArray choice1CoursesJson = curriculumJson.getJSONArray("choice1");
-        JSONArray choice2CoursesJson = curriculumJson.getJSONArray("choice2");
+        JSONArray choiceCoursesJson = curriculumJson.getJSONArray("choice");
 
         Set<String> takenCourses = createTakenCoursesSet(courses);
 
         addCoursesToList(mandatoryCoursesLeft, mandatoryCoursesJson, takenCourses);
-        addCoursesToList(choiceCourses1Left, choice1CoursesJson, takenCourses);
-        addCoursesToList(choiceCourses2Left, choice2CoursesJson, takenCourses);
+        addCoursesToList(choiceCoursesLeft, choiceCoursesJson, takenCourses);
         
-        choiceCourses1Needed -= 4-choiceCourses1Left.size();
-        choiceCourses2Needed -= 12-choiceCourses2Left.size();
+        choiceCoursesNeeded -= 8-choiceCoursesLeft.size();
         
-        if (choiceCourses1Needed<=0 && choiceCourses2Needed<=0){
-            if (mandatoryCoursesLeft.isEmpty()) {
-                passedAll = true;
-            }
-            
-            choiceCourses1Needed=0;
-            choiceCourses2Needed=0;
+        if (mandatoryCoursesLeft.isEmpty() && choiceCoursesNeeded<=0 ){//40 courses of which 8 are choice
+            passedAll = true;
+            choiceCoursesNeeded=0;
         }
               
         result.setMandatoryCoursesLeft(mandatoryCoursesLeft);
         result.setMandatoryCoursesNeeded(mandatoryCoursesLeft.size());
-        result.setChoiceCourses1Left(choiceCourses1Left);
-        result.setChoiceCourses1Needed(choiceCourses1Needed);
-        result.setChoiceCourses2Left(choiceCourses2Left);
-        result.setChoiceCourses2Needed(choiceCourses2Needed);
-        result.setMandatoryCoursesNeeded(choiceCourses2Needed);
+        result.setChoiceCoursesLeft(choiceCoursesLeft);
+        result.setChoiceCoursesNeeded(choiceCoursesNeeded);
         result.setPassedAll(passedAll);
         return result;
     }
@@ -632,7 +620,7 @@ public class UtilFunctions {
         NeededCoursesPeir result = new NeededCoursesPeir();
         
         ArrayList<Course> mandatoryCoursesLeft = new ArrayList<>();
-        int choiceCoursesNeeded = 4;
+        int choiceCoursesNeeded = 5;
         ArrayList<Course> choiceCoursesLeft = new ArrayList<>();
         boolean passedAll = false;
 
