@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The Parser class is responsible for parsing JSON data and extracting relevant information about a student.
@@ -107,9 +109,15 @@ public class Parser {
                 return grades;
             }
 
+            Pattern greekPattern = Pattern.compile("[Α-Ωα-ω]");//greek letters
+
             for (JsonNode courseJSON : studentCourses) {
                 Course course = new Course();
                 String id = courseJSON.get("courseCode").asText();
+                Matcher matcher = greekPattern.matcher(id);
+                if (matcher.find()) {
+                    id = id.replace("Ν", "N").replace("Ρ", "P");//replace necessary greek letters
+                }
                 course.setId(id);
 
                 String name = courseJSON.get("title").asText();
