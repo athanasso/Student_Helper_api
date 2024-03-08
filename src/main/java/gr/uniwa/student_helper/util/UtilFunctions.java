@@ -480,7 +480,7 @@ public class UtilFunctions {
         // Software Courses
         ArrayList<JSONArray> array = new ArrayList<>();
         
-        if (flow.equals("Μηχανικών Λογισμικού")){
+        if (flow.equals("ΜΗΧΑΝΙΚΩΝ ΛΟΓΙΣΜΙΚΟΥ ΤΕ")){
             basicCoursesNeeded = countCoursesNotTaken(basic1CoursesJson, takenCourses);
             basicCoursesLeft = getRemainingCourses(basic1CoursesJson, takenCourses);
             choiceCoursesFromSameBasicLeft = getRemainingCourses(choice1CoursesJson, takenCourses);
@@ -502,7 +502,7 @@ public class UtilFunctions {
 
         }
         
-        else if (flow.equals("Μηχανικών Η/Υ")){
+        else if (flow.equals("ΜΗΧΑΝΙΚΩΝ Η/Υ ΤΕ") || flow.equals("ΜΗΧΑΝΙΚΩΝ ΗΛΕΚΤΡΟΝΙΚΟΥ ΥΠΟΛΟΓΙΣΤΗ ΤΕ")){
             // Hardware Courses
             array = new ArrayList<>();
 
@@ -527,7 +527,7 @@ public class UtilFunctions {
         
         }
         
-        else if (flow.equals("Μηχανικών Δικτύων")){
+        else if (flow.equals("ΜΗΧΑΝΙΚΩΝ ΔΙΚΤΥΩΝ ΤΕ")){
             // Network Courses
             array = new ArrayList<>();
 
