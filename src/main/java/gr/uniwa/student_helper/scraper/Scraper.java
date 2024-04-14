@@ -267,10 +267,6 @@ public class Scraper {
             e.printStackTrace();
         }
 
-        logger.info(cookie);
-        logger.info(_csrf);
-        logger.info(xProfile);
-        
         if (cookie == null ||
             _csrf == null ||
             xProfile == null) return;
