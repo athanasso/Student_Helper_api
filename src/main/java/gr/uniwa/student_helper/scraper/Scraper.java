@@ -48,6 +48,16 @@ public class Scraper {
         this.authorized = true;
         this.getDocuments(loginForm.getUsername(), loginForm.getPassword(), loginForm.getCookies());
     }
+    
+    public Scraper(Map<String, String> cookies, String university, String system, String domain) {
+        this.UNIVERSITY = university;
+        this.DOMAIN = domain;
+        this.PRE_LOG = university + (system == null ? "" : "." + system);
+        this.USER_AGENT = UserAgentGenerator.generate();
+        this.connected = true;
+        this.authorized = true;
+        this.getDocuments(null, null, cookies);
+    }
 
     /**
      * Retrieves the documents for a given user.
@@ -64,9 +74,6 @@ public class Scraper {
             getHtmlPages(username, password);
         } else {
             getHtmlPages(cookies);
-            if (infoJSON == null || gradesJSON == null || totalAverageGrade == null) {
-                getHtmlPages(username, password);
-            }
         }
     }
 
@@ -100,7 +107,7 @@ public class Scraper {
                 lt = el.first().attributes().get("value");
             }
             Elements exec = doc.getElementsByAttributeValue("name", "execution");
-            execution = exec.first().attributes().get("value");
+            execution = exec.first().attributes().get("value");    
             data.put("username", username);
             data.put("password", password);
             if (lt != null) {
@@ -150,14 +157,6 @@ public class Scraper {
             if (!isAuthorized(pageIncludesToken)) {
                 return;
             }
-
-            Elements el = pageIncludesToken.getElementsByAttributeValue("name", "_csrf");
-            if (!el.isEmpty()) {
-                Element csrfElement = el.first();
-                if (csrfElement != null) {
-                    _csrf = csrfElement.attributes().get("content");
-                }
-            }
         } catch (SocketTimeoutException | UnknownHostException | HttpStatusException | ConnectException connException) {
             connected = false;
             logger.warn("[" + PRE_LOG + "] Warning: {}", connException.getMessage(), connException);
@@ -173,7 +172,52 @@ public class Scraper {
         for (Map.Entry<String, String> entry: sessionCookies.entrySet()) {
             cookie.append(entry.getKey()).append("=").append(entry.getValue()).append(";");
         }
+        
+        try {
+            response = Jsoup.connect("https://sso." + UNIVERSITY.toLowerCase() + ".gr/login?service=https%3A%2F%2F" + DOMAIN)
+                    .data(data)
+                    .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+                    .header("Accept-Encoding", "gzip, deflate, br")
+                    .header("Accept-Language", "en-US,en;q=0.9,el-GR;q=0.8,el;q=0.7")
+                    .header("Cache-Control", "max-age=0")
+                    .header("Connection", "keep-alive")
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .header("Host", "sso." + UNIVERSITY.toLowerCase() + ".gr")
+                    .header("Origin", "https://sso." + UNIVERSITY.toLowerCase() + ".gr")
+                    .header("Referer", "https://sso." + UNIVERSITY.toLowerCase() + ".gr/login?service=https%3A%2F%2F" + DOMAIN + "%2Flogin%2Fcas")
+                    .header("Sec-Fetch-Dest", "document")
+                    .header("Sec-Fetch-Mode", "navigate")
+                    .header("Sec-Fetch-Site", "same-origin")
+                    .header("Sec-Fetch-User", "?1")
+                    .header("Upgrade-Insecure-Requests", "1")
+                    .header("User-Agent", USER_AGENT)
+                    .cookies(sessionCookies)
+                    .ignoreHttpErrors(true)
+                    .method(Connection.Method.POST)
+                    .execute();
 
+            // authentication check
+            Document pageIncludesToken = response.parse();
+            if (!isAuthorized(pageIncludesToken)) {
+                return;
+            }
+            
+            Elements el = pageIncludesToken.getElementsByAttributeValue("name", "_csrf");
+            if (!el.isEmpty()) {
+                Element csrfElement = el.first();
+                if (csrfElement != null) {
+                    _csrf = csrfElement.attributes().get("content");
+                }
+            }
+        } catch (SocketTimeoutException | UnknownHostException | HttpStatusException | ConnectException connException) {
+            connected = false;
+            logger.warn("[" + PRE_LOG + "] Warning: {}", connException.getMessage(), connException);
+            return;
+        } catch (IOException e) {
+            logger.error("[" + PRE_LOG + "] Error: {}", e.getMessage(), e);
+            return;
+        }
+       
         String profilesJSON = httpGET("https://" + DOMAIN + "/api/person/profiles", cookie.toString(), _csrf);
         if (profilesJSON == null) return;
 
@@ -199,13 +243,38 @@ public class Scraper {
      * @param cookies a map containing the necessary cookies for authentication
      */
     private void getHtmlPages(Map<String, String> cookies) {
-        String cookie = cookies.get("cookie");
-        String _csrf = cookies.get("_csrf");
-        String xProfile = cookies.get("xProfile");
+        // Extract the nested cookies map from the main cookies map
+        String cookieData = cookies.get("cookies");
+        
+        String cookie = null;
+        String _csrf = null;
+        String xProfile = null;
+        
+         // Parse the cookie data as a JSON string to extract individual cookies
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode cookiesNode = objectMapper.readTree(cookieData);
+
+            // Retrieve individual cookies from the JSON object
+            cookie = cookiesNode.get("cookie").asText();
+            _csrf = cookiesNode.get("_csrf").asText();
+            xProfile = cookiesNode.get("xProfile").asText();
+
+            // Now you can use the retrieved cookie, _csrf, and xProfile values
+            // for further processing
+        } catch (IOException e) {
+            // Handle JSON parsing exception
+            e.printStackTrace();
+        }
+
+        logger.info(cookie);
+        logger.info(_csrf);
+        logger.info(xProfile);
+        
         if (cookie == null ||
             _csrf == null ||
             xProfile == null) return;
-
+        
         infoJSON = httpGET("https://" + DOMAIN + "/feign/student/student_data", cookie, _csrf, xProfile);
         if (infoJSON == null) return;
 

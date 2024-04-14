@@ -4,7 +4,7 @@ import gr.uniwa.student_helper.model.FileCourse;
 import gr.uniwa.student_helper.model.FileData;
 import gr.uniwa.student_helper.model.LoginForm;
 import gr.uniwa.student_helper.services.ImportService;
-import gr.uniwa.student_helper.services.ScrapeService;
+import gr.uniwa.student_helper.services.LoginService;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
@@ -21,7 +21,7 @@ import org.mockito.MockitoAnnotations;
 public class JavaEE8ResourceTest {
 
     @Mock
-    private ScrapeService scrapeService;
+    private LoginService scrapeService;
 
     @Mock
     private ImportService importService;

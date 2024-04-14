@@ -79,7 +79,7 @@ public class ImportService {
                 return Response.status(500);
             }
 
-            StudentDTO studentDTO = new StudentDTO(student);
+            StudentDTO studentDTO = new StudentDTO(student, null);
             logger.debug("student read");
             
             return Response.ok(studentDTO);

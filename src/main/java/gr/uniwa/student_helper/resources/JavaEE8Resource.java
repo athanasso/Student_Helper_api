@@ -4,7 +4,8 @@ package gr.uniwa.student_helper.resources;
 import gr.uniwa.student_helper.model.FileData;
 import gr.uniwa.student_helper.model.LoginForm;
 import gr.uniwa.student_helper.services.ImportService;
-import gr.uniwa.student_helper.services.ScrapeService;
+import gr.uniwa.student_helper.services.LoginService;
+import gr.uniwa.student_helper.services.RephreshService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -15,6 +16,7 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
 import java.util.Base64;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,10 +27,13 @@ import org.slf4j.LoggerFactory;
 public class JavaEE8Resource {
 
     @Inject
-    ScrapeService scrapeService;
+    LoginService loginService;
      
     @Inject
     ImportService importService;
+    
+    @Inject
+    RephreshService rephreshService;
 
     private final Logger logger = LoggerFactory.getLogger(JavaEE8Resource.class);
 
@@ -58,7 +63,7 @@ public class JavaEE8Resource {
                 String username = parts[0];
                 String password = parts[1];
 
-                ResponseBuilder responseBuilder = scrapeService.getStudent("uniwa", loginForm);
+                ResponseBuilder responseBuilder = loginService.getStudent("uniwa", loginForm);
                 return responseBuilder.build();
             } else {
                 // Handle unauthorized request
@@ -84,6 +89,31 @@ public class JavaEE8Resource {
         try {
             ResponseBuilder responseBuilder = importService.getStudent(fileData);
             return responseBuilder.build();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return Response.status(400).build();
+        }
+    }
+    
+    /**
+     * Retrieves student information based on cookies.
+     * 
+     * @return A response containing the student information in JSON format.
+     */
+    @Path("rephresh")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @POST
+    public Response getStudent(Map<String, String> cookies) {
+        try {
+            if(!cookies.isEmpty()) {
+                
+                ResponseBuilder responseBuilder = rephreshService.getStudent("uniwa", cookies);
+                return responseBuilder.build();
+            } else {
+                // Handle unauthorized request
+                return Response.status(Response.Status.UNAUTHORIZED).build();
+            }
         } catch (Exception e) {
             logger.error(e.getMessage());
             return Response.status(400).build();

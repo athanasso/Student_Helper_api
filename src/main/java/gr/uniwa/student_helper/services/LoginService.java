@@ -6,16 +6,17 @@ import gr.uniwa.student_helper.model.Student;
 import gr.uniwa.student_helper.parser.Parser;
 import gr.uniwa.student_helper.scraper.Scraper;
 import jakarta.ws.rs.core.Response;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The ScrapeService class is responsible for scraping student information from a specific university's website.
+ * The LoginService class is responsible for scraping student information from a specific university's website via login username and password.
  * It provides methods to retrieve student data and handle any errors that may occur during the scraping process.
  */
-public class ScrapeService {
+public class LoginService {
     
-    private final Logger logger = LoggerFactory.getLogger(ScrapeService.class);
+    private final Logger logger = LoggerFactory.getLogger(LoginService.class);
 
     public Response.ResponseBuilder getStudent(String university, LoginForm loginForm) {
         return getUniwaStudent(loginForm, university, null, "services.uniwa.gr");
@@ -42,6 +43,7 @@ public class ScrapeService {
             String gradesJSON = scraper.getGradesJSON();
             String thesisJson = scraper.getThesisJSON();
             String totalAverageGrade = scraper.getTotalAverageGrade();
+            Map<String, String> cookies = scraper.getCookies();
 
             // check for internal errors
             if (infoJSON == null || gradesJSON == null || totalAverageGrade == null) {
@@ -57,7 +59,7 @@ public class ScrapeService {
                 return Response.status(500);
             }
 
-            StudentDTO studentDTO = new StudentDTO(student);
+            StudentDTO studentDTO = new StudentDTO(student, cookies);
             logger.debug("student read");
             
             return Response.ok(studentDTO);
