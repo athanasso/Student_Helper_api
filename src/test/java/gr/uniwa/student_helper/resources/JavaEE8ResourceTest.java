@@ -5,10 +5,13 @@ import gr.uniwa.student_helper.model.FileData;
 import gr.uniwa.student_helper.model.LoginForm;
 import gr.uniwa.student_helper.services.ImportService;
 import gr.uniwa.student_helper.services.LoginService;
+import gr.uniwa.student_helper.services.RephreshService;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +28,9 @@ public class JavaEE8ResourceTest {
 
     @Mock
     private ImportService importService;
+    
+    @Mock
+    private RephreshService rephreshService;
 
     @InjectMocks
     private JavaEE8Resource javaEE8Resource;
@@ -92,5 +98,42 @@ public class JavaEE8ResourceTest {
         Response response = javaEE8Resource.getStudent(loginForm, headers);
 
         assertEquals(401, response.getStatus());
+    }
+    
+    @Test
+    public void testGetStudentWithValidCookies() {
+        Map<String, String> cookies = new HashMap<>();
+        cookies.put("cookie1", "value1");
+        cookies.put("cookie2", "value2");
+
+        ResponseBuilder responseBuilder = Response.ok().entity("Student data");
+        when(rephreshService.getStudent("uniwa", cookies)).thenReturn(responseBuilder);
+
+        Response response = javaEE8Resource.getStudent(cookies);
+
+        assertEquals(200, response.getStatus());
+        assertEquals("Student data", response.getEntity());
+    }
+
+    @Test
+    public void testGetStudentWithEmptyCookies() {
+        Map<String, String> cookies = new HashMap<>();
+
+        Response response = javaEE8Resource.getStudent(cookies);
+
+        assertEquals(401, response.getStatus());
+    }
+
+    @Test
+    public void testGetStudentWithException() {
+        Map<String, String> cookies = new HashMap<>();
+        cookies.put("cookie1", "value1");
+        cookies.put("cookie2", "value2");
+
+        when(rephreshService.getStudent("uniwa", cookies)).thenThrow(new RuntimeException("Error"));
+
+        Response response = javaEE8Resource.getStudent(cookies);
+
+        assertEquals(400, response.getStatus());
     }
 }
