@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
  * The RephreshService class is responsible for scraping student information from a specific university's website via session cookies.
  * It provides methods to retrieve student data and handle any errors that may occur during the scraping process.
  */
-public class RephreshService {
+public class RefreshService {
     
-    private final Logger logger = LoggerFactory.getLogger(RephreshService.class);
+    private final Logger logger = LoggerFactory.getLogger(RefreshService.class);
 
     public Response.ResponseBuilder getStudent(String university, Map<String, String> cookies) {
         return getUniwaStudent(cookies, university, null, "services.uniwa.gr");

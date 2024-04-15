@@ -5,7 +5,7 @@ import gr.uniwa.student_helper.model.FileData;
 import gr.uniwa.student_helper.model.LoginForm;
 import gr.uniwa.student_helper.services.ImportService;
 import gr.uniwa.student_helper.services.LoginService;
-import gr.uniwa.student_helper.services.RephreshService;
+import gr.uniwa.student_helper.services.RefreshService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -33,7 +33,7 @@ public class JavaEE8Resource {
     ImportService importService;
     
     @Inject
-    RephreshService rephreshService;
+    RefreshService refreshService;
 
     private final Logger logger = LoggerFactory.getLogger(JavaEE8Resource.class);
 
@@ -100,7 +100,7 @@ public class JavaEE8Resource {
      * 
      * @return A response containing the student information in JSON format.
      */
-    @Path("rephresh")
+    @Path("refresh")
     @Produces("application/json")
     @Consumes("application/json")
     @POST
@@ -108,7 +108,7 @@ public class JavaEE8Resource {
         try {
             if(!cookies.isEmpty()) {
                 
-                ResponseBuilder responseBuilder = rephreshService.getStudent("uniwa", cookies);
+                ResponseBuilder responseBuilder = refreshService.getStudent("uniwa", cookies);
                 return responseBuilder.build();
             } else {
                 // Handle unauthorized request

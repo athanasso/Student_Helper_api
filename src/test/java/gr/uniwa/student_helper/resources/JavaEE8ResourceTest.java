@@ -5,7 +5,7 @@ import gr.uniwa.student_helper.model.FileData;
 import gr.uniwa.student_helper.model.LoginForm;
 import gr.uniwa.student_helper.services.ImportService;
 import gr.uniwa.student_helper.services.LoginService;
-import gr.uniwa.student_helper.services.RephreshService;
+import gr.uniwa.student_helper.services.RefreshService;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
@@ -30,7 +30,7 @@ public class JavaEE8ResourceTest {
     private ImportService importService;
     
     @Mock
-    private RephreshService rephreshService;
+    private RefreshService refreshService;
 
     @InjectMocks
     private JavaEE8Resource javaEE8Resource;
@@ -107,7 +107,7 @@ public class JavaEE8ResourceTest {
         cookies.put("cookie2", "value2");
 
         ResponseBuilder responseBuilder = Response.ok().entity("Student data");
-        when(rephreshService.getStudent("uniwa", cookies)).thenReturn(responseBuilder);
+        when(refreshService.getStudent("uniwa", cookies)).thenReturn(responseBuilder);
 
         Response response = javaEE8Resource.getStudent(cookies);
 
@@ -130,7 +130,7 @@ public class JavaEE8ResourceTest {
         cookies.put("cookie1", "value1");
         cookies.put("cookie2", "value2");
 
-        when(rephreshService.getStudent("uniwa", cookies)).thenThrow(new RuntimeException("Error"));
+        when(refreshService.getStudent("uniwa", cookies)).thenThrow(new RuntimeException("Error"));
 
         Response response = javaEE8Resource.getStudent(cookies);
 
